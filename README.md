@@ -20,10 +20,10 @@ npm start
 
 ## API oskab töödelda:
 ### tagastame kõik vasted andmebaasist:
-*GET localhost:3000/api/v1/health
-*GET localhost:3000/api/v1/users
-*GET localhost:3000/api/v1/movies
-*GET localhost:3000/api/v1/tvseries
+<li>GET localhost:3000/api/v1/health
+GET localhost:3000/api/v1/users
+GET localhost:3000/api/v1/movies
+GET localhost:3000/api/v1/tvseries
 ### tagastame ainult päritu:
 GET localhost:3000/api/v1/users/{username}
 GET localhost:3000/api/v1/movies/{otsingufraas} - otsingufraas = üks tähemärk või täispikk pealkiri
