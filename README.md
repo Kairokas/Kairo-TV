@@ -20,23 +20,31 @@ npm start
 
 ## API oskab töödelda:
 ### tagastame kõik vasted andmebaasist:
-<li>GET localhost:3000/api/v1/health
-<li>GET localhost:3000/api/v1/users
-<li>GET localhost:3000/api/v1/movies
-<li>GET localhost:3000/api/v1/tvseries
+<ul>
+  <li>GET localhost:3000/api/v1/health
+  <li>GET localhost:3000/api/v1/users
+  <li>GET localhost:3000/api/v1/movies
+  <li>GET localhost:3000/api/v1/tvseries
+</ul>
 ### tagastame ainult päritu:
-<li>GET localhost:3000/api/v1/users/{username}
-<li>GET localhost:3000/api/v1/movies/{otsingufraas} - otsingufraas = üks tähemärk või täispikk pealkiri
-<li>GET localhost:3000/api/v1/tvseries/{otsingufraas} - otsingufraas = üks tähemärk või täispikk pealkiri
-<li>GET localhost:3000/api/v1/movies&id={id}
-<li>GET localhost:3000/api/v1/tvseries&id={id}
+<ul>
+  <li>GET localhost:3000/api/v1/users/{username}
+  <li>GET localhost:3000/api/v1/movies/{otsingufraas} - otsingufraas = üks tähemärk või täispikk pealkiri
+  <li>GET localhost:3000/api/v1/tvseries/{otsingufraas} - otsingufraas = üks tähemärk või täispikk pealkiri
+  <li>GET localhost:3000/api/v1/movies&id={id}
+  <li>GET localhost:3000/api/v1/tvseries&id={id}
+</ul>
 ### lisame uue sissekande
-<li>POST localhost:3000/api/v1/users - tahab väljasid: email, username, password
-<li>POST localhost:3000/api/v1/movies - tahab väljasid: movieTitle, releaseYear, locationURI, price
-<li>POST localhost:3000/api/v1/tvseries - tahab väljasid: seriesTitle, releaseYear, episodes, locationURI, price
+<ul>
+  <li>POST localhost:3000/api/v1/users - tahab väljasid: email, username, password
+  <li>POST localhost:3000/api/v1/movies - tahab väljasid: movieTitle, releaseYear, locationURI, price
+  <li>POST localhost:3000/api/v1/tvseries - tahab väljasid: seriesTitle, releaseYear, episodes, locationURI, price
+</ul>
 ### kustutame kirje
-<li>DELETE localhost:3000/api/v1/users/{username}
-<li>DELETE localhost:3000/api/v1/movies&id={id}
-<li>DELETE localhost:3000/api/v1/tvseries&id={id}
+<ul>
+  <li>DELETE localhost:3000/api/v1/users/{username}
+  <li>DELETE localhost:3000/api/v1/movies&id={id}
+  <li>DELETE localhost:3000/api/v1/tvseries&id={id}
+</ul>
 
 That's it folks!
