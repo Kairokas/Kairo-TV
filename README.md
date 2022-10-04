@@ -19,14 +19,14 @@ npm install --save-dev ts-node nodemon
 npm start
 
 ## API oskab töödelda:
-### tagastame kõik vasted andmebaasist:
+tagastame kõik vasted andmebaasist:
 <ul>
   <li>GET localhost:3000/api/v1/health
   <li>GET localhost:3000/api/v1/users
   <li>GET localhost:3000/api/v1/movies
   <li>GET localhost:3000/api/v1/tvseries
 </ul>
-### tagastame ainult päritu:
+tagastame ainult päritu:
 <ul>
   <li>GET localhost:3000/api/v1/users/{username}
   <li>GET localhost:3000/api/v1/movies/{otsingufraas} - otsingufraas = üks tähemärk või täispikk pealkiri
@@ -34,13 +34,13 @@ npm start
   <li>GET localhost:3000/api/v1/movies&id={id}
   <li>GET localhost:3000/api/v1/tvseries&id={id}
 </ul>
-### lisame uue sissekande
+lisame uue sissekande
 <ul>
   <li>POST localhost:3000/api/v1/users - tahab väljasid: email, username, password
   <li>POST localhost:3000/api/v1/movies - tahab väljasid: movieTitle, releaseYear, locationURI, price
   <li>POST localhost:3000/api/v1/tvseries - tahab väljasid: seriesTitle, releaseYear, episodes, locationURI, price
 </ul>
-### kustutame kirje
+kustutame kirje
 <ul>
   <li>DELETE localhost:3000/api/v1/users/{username}
   <li>DELETE localhost:3000/api/v1/movies&id={id}
