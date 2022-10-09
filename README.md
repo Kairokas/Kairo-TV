@@ -1,22 +1,8 @@
 # API, kuhu tulemas peagi ka SQL ja ReactJS front end
 
 ## Käivitamisjuhis:
-npm init -y
-npm install typescript
-npx tsc --init
-npm install --save-dev ts-node nodemon
-{
-  "watch": ["src"],
-  "ext": ".ts,.js",
-  "ignore": [],
-  "exec": "ts-node ./src/index.ts"
-} > nodemon.json
-"scripts": {
-    "build": "tsc",
-    "start": "nodemon"
-} >> package.json
-
-npm start
+docker-compose build
+docker-compose up
 
 ## API oskab töödelda:
 ### tagastame kõik vasted andmebaasist:

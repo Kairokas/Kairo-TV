@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  database:
+    image: mariadb:jammy
+    container_name: kairo-tv-db
+    ports:
+      - 3306:3306
+    environment:
+      MARIADB_DATABASE: "kairo-tv"
+      MARIADB_USER: "kairo"
+      MARIADB_PASSWORD: "mypass"
+      MARIADB_ROOT_PASSWORD: "some_random_password" # required
+      # .env failist loeme sätted
+      # - MARIADB_ROOT_PASSWORD: "${MARIADB_ROOT_PASSWORD}"
+    volumes:
+      - ./db/db_container_volume:/var/lib/mysql
+
+  node-api:
+    container_name: kairo-tv-API
+    build:
+      context: ./
+      target: dev
+      dockerfile: nodeAPI.Dockerfile
+    volumes:
+      - ./API:/nodeAPI
+    #command: npm run start:dev
+    ports:
+      - 3000:3000
+    environment:
+      NODE_ENV: development
+      DEBUG: nodejs-docker-express:*
+    depends_on:
+      - database

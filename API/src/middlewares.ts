@@ -47,4 +47,4 @@ const globalMiddlewares = {
 export default globalMiddlewares;
 
 // TODO
-// andmete valideerimine (sümbolite eemaldus, email, numbrid, andmefailide asukoht, kuupäev, parool, kasutajanimi)
+// VB eraldi interface'de juurde middleservicetena? andmete valideerimine (sümbolite eemaldus, email, numbrid, andmefailide asukoht, kuupäev, parool, kasutajanimi)
