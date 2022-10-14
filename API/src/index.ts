@@ -4,10 +4,12 @@ import globalMiddlewares from './middlewares';
 import moviesControllers from './components/Movies/controllers';
 import usersControllers from './components/Users/controllers';
 import tvSeriesControllers from './components/TVSeries/controllers';
+const cors = require('cors')
 
 const app = express();
 
 app.use(express.json());
+app.use(cors({origin: '*'}));
 
 const PORT = 3000;
 

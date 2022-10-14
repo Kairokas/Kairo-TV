@@ -26,9 +26,7 @@ const tvSeriesControllers = {
         return res.status(200).json({
             success: true,
             message: `Found titles which contain ${keyword} in them.`,
-            data: {
-                tvSeries: tvSeries
-            },
+            tvSeries: tvSeries
         });
     },
     getTvSeriesById: (req: Request, res: Response) => {
@@ -45,9 +43,7 @@ const tvSeriesControllers = {
         return res.status(200).json({
             success: true,
             message: `Requested TV series at your command.`,
-            data: {
-                tvSeries: tvSeries
-            },
+            tvSeries: tvSeries
         });
     },
     createTvSeries: (req: Request, res: Response) => {

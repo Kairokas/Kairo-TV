@@ -26,9 +26,7 @@ const moviesControllers = {
         return res.status(200).json({
             success: true,
             message: `Found titles which contain ${keyword} in them.`,
-            data: {
-                movies: movies
-            },
+            movies: movies
         });
     },
     getMoviesById: (req: Request, res: Response) => {
@@ -45,9 +43,7 @@ const moviesControllers = {
         return res.status(200).json({
             success: true,
             message: `Requested movie at your command.`,
-            data: {
-                movie: movie
-            },
+            movie: movie
         });
     },
     createMovie: (req: Request, res: Response) => {

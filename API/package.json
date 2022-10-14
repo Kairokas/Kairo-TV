@@ -1,5 +1,5 @@
 {
-  "name": "api_kodutoo",
+  "name": "api",
   "version": "1.0.0",
   "main": "index.js",
   "keywords": [],
@@ -19,7 +19,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "nodemon"
+    "start": "nodemon -L"
   },
   "description": ""
 }

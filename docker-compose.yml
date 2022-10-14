@@ -6,12 +6,11 @@ services:
     ports:
       - 3306:3306
     environment:
-      MARIADB_DATABASE: "kairo-tv"
-      MARIADB_USER: "kairo"
-      MARIADB_PASSWORD: "mypass"
-      MARIADB_ROOT_PASSWORD: "some_random_password" # required
       # .env failist loeme sätted
-      # - MARIADB_ROOT_PASSWORD: "${MARIADB_ROOT_PASSWORD}"
+      MARIADB_DATABASE: "${DB_NAME}"
+      MARIADB_USER: "${DB_USER}"
+      MARIADB_PASSWORD: "${DB_PASSWORD}"
+      MARIADB_ROOT_PASSWORD: "${MARIADB_ROOT_PASSWORD}" # required
     volumes:
       - ./db/db_container_volume:/var/lib/mysql
 
@@ -19,15 +18,41 @@ services:
     container_name: kairo-tv-API
     build:
       context: ./
-      target: dev
       dockerfile: nodeAPI.Dockerfile
     volumes:
+      # et automaatne restart toimuks arendamisel
       - ./API:/nodeAPI
+      # vastasel juhul ei saa me Dockerfile's installitut kasutada
+      - /nodeAPI/node_modules
+      # COPY ei funka, sest faili asukoht asub volume sees, mis resetib sisu
+      - .env:/nodeAPI/.env
     #command: npm run start:dev
     ports:
       - 3000:3000
     environment:
-      NODE_ENV: development
       DEBUG: nodejs-docker-express:*
     depends_on:
       - database
+
+  # node-front-end:
+  #   container_name: kairo-tv-front
+  #   build:
+  #     context: ./
+  #     dockerfile: nodefront.Dockerfile
+  #   volumes:
+  #     - ./react-front:/usr/src/
+  #   #command: npm run start:dev
+  #   ports:
+  #     - 80:3000
+  #   environment:
+  #     DEBUG: nodejs-docker-express:*
+
+  front-end:
+    container_name: kairo-tv-front
+    build:
+      context: ./
+      dockerfile: front.Dockerfile
+    volumes:
+     - ./react-front:/usr/share/nginx/html
+    ports:
+      - 80:80

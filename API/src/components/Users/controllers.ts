@@ -3,9 +3,9 @@ import { UserInterface } from "./interfaces";
 import usersServices from "./services";
 
 const usersControllers = {
-    getAllUsers: (req: Request, res: Response) => {
-        const users = usersServices.getAllUsers();
-        
+    getAllUsers: async (req: Request, res: Response) => {
+        const users = await usersServices.getAllUsers();
+        console.log(users);
         res.status(200).json({
             success: true,
             message: 'List of users registered.',
@@ -26,9 +26,7 @@ const usersControllers = {
         return res.status(200).json({
             success: true,
             message: `Requested user at your command.`,
-            data: {
-                user: user
-            },
+            user: user
         });
     },
     createUser: (req: Request, res: Response) => {

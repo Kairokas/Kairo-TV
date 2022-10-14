@@ -1,19 +1,19 @@
 FROM node:slim as base
 
 WORKDIR /nodeAPI
-COPY package*.json /nodeAPI
+# COPY API /nodeAPI
 
-#COPY . /
-
-# production stage - tulevikus
-# FROM base as production
-# ENV NODE_ENV=production
-# RUN npm install -g nodemon && npm install
-FROM base as dev
-# ENV NODE_ENV=development
 RUN npm init -y
-RUN npm install typescript
+RUN npm i typescript
+RUN npm i --save-dev @types/node
 RUN npx tsc --init
-RUN npm install --save-dev ts-node nodemon
-# COPY /API /
+RUN npm i --save-dev ts-node nodemon
+RUN npm i dotenv
+RUN npm i --save express
+RUN npm i --save @types/express
+RUN npm i cors
+RUN npm i mariadb
+
+# RUN apt-get update && apt-get install -y telnet
+
 CMD ["npm", "start"]
