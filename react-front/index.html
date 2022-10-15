@@ -3,90 +3,20 @@
 <html>
   <head>
     <title>Kairo TV</title>
-	<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+	  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-	<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+	  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script type="text/babel" src="./front.js"></script>
+    <link rel="stylesheet" href="./style.css">
   </head>
   <body>
-    <div id="controls"></div>
+    <header>
+      <div id="controls">
+      </div>
+    </header>
     <div id="content"></div>	
   </body>
-  <script type="text/babel">
-    function HomeContent() {
-      const [movies, changeMovies] = React.useState([]);
-
-      function getAllMovies() {
-        fetch('http://localhost:3000/api/v1/movies')
-        .then((response) => response.json())
-        .then((data) => {
-            changeMovies(data.movies);
-        });
-      };
-
-      React.useEffect(() => {  
-        getAllMovies();
-      }, []);
-
-      let renderedOutput = movies.map(item => <div className="content-box" key={item.movieTitle}> {item.movieTitle} </div>);
-
-      return  <div className="content-parent">
-                {renderedOutput}
-              </div>;
-	}
-
-  function ControlsContent() {
-    const [searchText, updateSearhText] = React.useState();
-    const [movies, changeMovies] = React.useState([]);
-
-    function getContentByTitle(keyword) {
-      fetch(`http://localhost:3000/api/v1/movies/${keyword}`)
-      .then((response) => response.json())
-      .then((data) => {
-          changeMovies(data.movies);
-      });
-    };
-
-    // vb kunagi kasutame
-    function hideContent() {
-      document.getElementById("content").style.display = "none";
-    }
-
-    function showContent() {
-      document.getElementById("content").style.display = "block";
-      changeMovies([]);
-    }
-
-    const handleChange = event => {
-      updateSearhText(event.target.value);
-
-      if (event.target.value != '') {
-        document.getElementById("content").style.display = "none";
-
-        getContentByTitle(event.target.value);
-      }
-    };
-
-    let renderedOutput = movies.map(item => <div className="content-box" key={item.movieTitle}> {item.movieTitle} </div>);
-
-    return  <div className="controls-parent">
-              <input 
-                onBlur={showContent} 
-                /*onFocus={hideContent}*/ 
-                onChange={handleChange} 
-                /*onChange={(e) => updateSearhText(e.target.value)}*/ 
-                type="search" 
-                value={searchText ? searchText:""}>
-              </input>
-              Found titles: {renderedOutput}
-            </div>;
-  }
-
-	const content_div = ReactDOM.createRoot(document.getElementById("content"))
-	content_div.render(< HomeContent />)
-
-  const controls_div = ReactDOM.createRoot(document.getElementById("controls"))
-	controls_div.render(< ControlsContent />)
-  </script>
 </html>
 
 

@@ -3,8 +3,8 @@ import { TVSeriesInterface } from "./interfaces";
 import tvSeriesServices from "./services";
 
 const tvSeriesControllers = {
-    getAllTvSeries: (req: Request, res: Response) => {
-        const tvSeries = tvSeriesServices.findAllTvSeries();
+    getAllTvSeries: async (req: Request, res: Response) => {
+        const tvSeries = await tvSeriesServices.findAllTvSeries();
 
         res.status(200).json({
             success: true,
@@ -12,9 +12,9 @@ const tvSeriesControllers = {
             tvSeries: tvSeries
         });
     },
-    getTvSeriesTitlesByKeyword: (req: Request, res: Response) => {
+    getTvSeriesTitlesByKeyword: async (req: Request, res: Response) => {
         const keyword = req.params.titleKeyword;
-        let tvSeries = tvSeriesServices.findTvSeriesByKeyword(keyword);
+        let tvSeries = await tvSeriesServices.findTvSeriesByKeyword(keyword);
         
         if (tvSeries.length == 0) {
             return res.status(404).json({
@@ -29,9 +29,9 @@ const tvSeriesControllers = {
             tvSeries: tvSeries
         });
     },
-    getTvSeriesById: (req: Request, res: Response) => {
+    getTvSeriesById: async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
-        let tvSeries: TVSeriesInterface | undefined = tvSeriesServices.findTvSeriesById(id);
+        let tvSeries = await tvSeriesServices.findTvSeriesById(id);
         
         if (!tvSeries) {
             return res.status(404).json({
@@ -46,7 +46,7 @@ const tvSeriesControllers = {
             tvSeries: tvSeries
         });
     },
-    createTvSeries: (req: Request, res: Response) => {
+    createTvSeries: async (req: Request, res: Response) => {
         const { id, seriesTitle, releaseYear, episodes, locationURI, price } = req.body;
 
         const newTvSeries: TVSeriesInterface = {
@@ -70,7 +70,7 @@ const tvSeriesControllers = {
             });
         }
     },
-    deleteTvSeries: (req: Request, res: Response) => {
+    deleteTvSeries: async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
 
         let tvSeries: TVSeriesInterface | undefined = tvSeriesServices.findTvSeriesById(id);

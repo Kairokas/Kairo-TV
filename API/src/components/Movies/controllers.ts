@@ -3,8 +3,8 @@ import { MovieInterface } from "./interfaces";
 import movieServices from "./services";
 
 const moviesControllers = {
-    getAllMovies: (req: Request, res: Response) => {
-        const movies = movieServices.findAllMovies();
+    getAllMovies: async (req: Request, res: Response) => {
+        const movies = await movieServices.findAllMovies();
 
         res.status(200).json({
             success: true,
@@ -12,9 +12,9 @@ const moviesControllers = {
             movies: movies
         });
     },
-    getMovieTitlesByKeyword: (req: Request, res: Response) => {
+    getMovieTitlesByKeyword: async (req: Request, res: Response) => {
         const keyword = req.params.titleKeyword;
-        let movies = movieServices.findMoviesByKeyword(keyword);
+        let movies = await movieServices.findMoviesByKeyword(keyword);
         
         if (movies.length == 0) {
             return res.status(404).json({
@@ -29,11 +29,11 @@ const moviesControllers = {
             movies: movies
         });
     },
-    getMoviesById: (req: Request, res: Response) => {
+    getMoviesById: async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
-        let movie: MovieInterface | undefined = movieServices.findMovieById(id);
-        
-        if (!movie) {
+        let movie = await movieServices.findMovieById(id);
+
+        if (!movie || movie.length == 0) {
             return res.status(404).json({
                 success: false,
                 message: `Movie not found`
@@ -46,7 +46,7 @@ const moviesControllers = {
             movie: movie
         });
     },
-    createMovie: (req: Request, res: Response) => {
+    createMovie: async (req: Request, res: Response) => {
         const { id, movieTitle, releaseYear, locationURI, price } = req.body;
 
         const newMovie: MovieInterface = {
@@ -57,22 +57,22 @@ const moviesControllers = {
             price
         };
 
-        if (movieServices.createMovie(newMovie)) {
-            return res.status(201).json({
-                success: true,
-                message: `Movie with title ${movieTitle} created`,
-            });
-        } else {
-            return res.status(400).json({
-                success: false,
-                message: `Movie with title ${movieTitle} already exists`
-            });
-        }
+        // if (movieServices.createMovie(newMovie)) {
+        //     return res.status(201).json({
+        //         success: true,
+        //         message: `Movie with title ${movieTitle} created`,
+        //     });
+        // } else {
+        //     return res.status(400).json({
+        //         success: false,
+        //         message: `Movie with title ${movieTitle} already exists`
+        //     });
+        // }
     },
-    deleteMovie: (req: Request, res: Response) => {
+    deleteMovie: async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
 
-        let movie: MovieInterface | undefined = movieServices.findMovieById(id);
+        let movie = movieServices.findMovieById(id);
         
         if (!movie) {
             return res.status(404).json({
@@ -84,7 +84,7 @@ const moviesControllers = {
 
             return res.status(201).json({
                 success: true,
-                message: `Movie ${movie.movieTitle} deleted.`
+                message: `Movie ${movie} deleted.`
             });
         }
     }

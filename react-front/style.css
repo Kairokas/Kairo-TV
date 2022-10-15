@@ -1,0 +1,15 @@
+body {
+    margin: 0;
+}
+
+#controls {
+    padding: 2% 5% 6% 5%;
+}
+
+#controls-parent {
+    float: right;
+}
+
+#content, #searched-content {
+    padding: 0% 5% 0% 5%;
+}

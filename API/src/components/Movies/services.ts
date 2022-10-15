@@ -1,24 +1,19 @@
 import { moviesFromDB } from "../../mockData";
 import { MovieInterface } from "./interfaces";
+import getDataFromDB from "../../functions";
 
 const moviesServices = {
-    findAllMovies: () => {
-        // Siin pöördume vist DB poole pärides kasutajad?
-        // Aletrnatiiv oleks siin lause koostada aga eraldi fail kursori, connectioni jms. haldamiseks
-        return moviesFromDB;
-    },
-    findMoviesByKeyword: (keyword: string) => {
-        let matchingMovies: MovieInterface[] = [];
+    findAllMovies: async () => {
+        let movies = await getDataFromDB(`SELECT * FROM Movies`);        
 
-        moviesFromDB.forEach(movie => {
-            if (movie.movieTitle.includes(keyword)) {
-                matchingMovies.push(movie);
-            }
-        });
+        return movies;
+    },
+    findMoviesByKeyword: async (keyword: string) => {
+        let matchingMovies = await getDataFromDB(`SELECT * FROM Movies WHERE Title LIKE '%${keyword}%'`);
         
         return matchingMovies;
     },
-    createMovie: (movie: MovieInterface): boolean => {
+    createMovie: async (movie: MovieInterface) => {
         let newMovieExists: MovieInterface | undefined = moviesFromDB.find(element => element.movieTitle === movie.movieTitle);
         
         if (newMovieExists) {
@@ -30,12 +25,12 @@ const moviesServices = {
             return true;
         }
     },
-    findMovieById: (id: number) => {
-        let movie: MovieInterface | undefined = moviesFromDB.find(element => element.id === id);
+    findMovieById: async (id: number) => {
+        let movie = await getDataFromDB(`SELECT * FROM Movies WHERE ID = ${id}`);
         
         return movie;
     },
-    deleteMovie: (id: number) => {
+    deleteMovie: async (id: number) => {
         // peaksime tegelt andmebaasist kustutama
         //
         const newMoviesFromDB = moviesFromDB.filter(element => !(element.id === id));

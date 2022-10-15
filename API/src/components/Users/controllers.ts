@@ -5,29 +5,29 @@ import usersServices from "./services";
 const usersControllers = {
     getAllUsers: async (req: Request, res: Response) => {
         const users = await usersServices.getAllUsers();
-        console.log(users);
+        
         res.status(200).json({
             success: true,
             message: 'List of users registered.',
             users: users
         });
     },
-    getUserByUsername: (req: Request, res: Response) => {
+    getUserByUsername: async (req: Request, res: Response) => {
         const username = req.params.username;
-        let user: UserInterface | undefined = usersServices.findUserByUsername(username);
+        let user = await usersServices.findUserByUsername(username);
         
-        if (!user) {
+        if (!user || user.length == 0) {
             return res.status(404).json({
                 success: false,
                 message: `User not found`
             });
+        } else {
+            return res.status(200).json({
+                success: true,
+                message: `Requested user at your command.`,
+                user: user
+            });
         }
-
-        return res.status(200).json({
-            success: true,
-            message: `Requested user at your command.`,
-            user: user
-        });
     },
     createUser: (req: Request, res: Response) => {
         const { email, password, username } = req.body;
@@ -53,7 +53,7 @@ const usersControllers = {
     deleteUser: (req: Request, res: Response) => {
         const username = req.params.username;
 
-        let user: UserInterface | undefined = usersServices.findUserByUsername(username);
+        let user = usersServices.findUserByUsername(username);
         
         if (!user) {
             return res.status(404).json({

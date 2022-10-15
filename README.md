@@ -41,3 +41,6 @@ DELETE localhost:3000/api/v1/movies&id={id}
 DELETE localhost:3000/api/v1/tvseries&id={id}
 
 That's it folks!
+
+Kyssad
+Kuidas saaks HTML'i elemente "pikendada" reactiga?
