@@ -44,3 +44,5 @@ That's it folks!
 
 Kyssad
 Kuidas saaks HTML'i elemente "pikendada" reactiga?
+State jagamine erinevate komponentide vahel
+Teise faili state laadimine
