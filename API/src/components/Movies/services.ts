@@ -1,4 +1,3 @@
-import { moviesFromDB } from "../../mockData";
 import { MovieInterface } from "./interfaces";
 import getDataFromDB from "../../functions";
 
@@ -13,30 +12,30 @@ const moviesServices = {
         
         return matchingMovies;
     },
-    createMovie: async (movie: MovieInterface) => {
-        let newMovieExists: MovieInterface | undefined = moviesFromDB.find(element => element.movieTitle === movie.movieTitle);
+    // createMovie: async (movie: MovieInterface) => {
+    //     let newMovieExists: MovieInterface | undefined = moviesFromDB.find(element => element.movieTitle === movie.movieTitle);
         
-        if (newMovieExists) {
-            return false;
-        } else {
-            // või lisame andmebaasi
-            moviesFromDB.push(movie);
+    //     if (newMovieExists) {
+    //         return false;
+    //     } else {
+    //         // või lisame andmebaasi
+    //         moviesFromDB.push(movie);
 
-            return true;
-        }
-    },
+    //         return true;
+    //     }
+    // },
     findMovieById: async (id: number) => {
         let movie = await getDataFromDB(`SELECT * FROM Movies WHERE ID = ${id}`);
         
         return movie;
     },
-    deleteMovie: async (id: number) => {
-        // peaksime tegelt andmebaasist kustutama
-        //
-        const newMoviesFromDB = moviesFromDB.filter(element => !(element.id === id));
+    // deleteMovie: async (id: number) => {
+    //     // peaksime tegelt andmebaasist kustutama
+    //     //
+    //     const newMoviesFromDB = moviesFromDB.filter(element => !(element.id === id));
 
-        console.log(newMoviesFromDB);
-    }
+    //     console.log(newMoviesFromDB);
+    // }
 }
 
 export default moviesServices;

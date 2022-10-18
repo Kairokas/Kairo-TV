@@ -38,36 +38,36 @@ const usersControllers = {
             username
         };
 
-        if (usersServices.createUser(newUser)) {
-            return res.status(201).json({
-                success: true,
-                message: `User with username ${username} created`,
-            });
-        } else {
-            return res.status(400).json({
-                success: false,
-                message: `User with username ${username} already exists`
-            });
-        }
+        // if (usersServices.createUser(newUser)) {
+        //     return res.status(201).json({
+        //         success: true,
+        //         message: `User with username ${username} created`,
+        //     });
+        // } else {
+        //     return res.status(400).json({
+        //         success: false,
+        //         message: `User with username ${username} already exists`
+        //     });
+        // }
     },
     deleteUser: (req: Request, res: Response) => {
         const username = req.params.username;
 
         let user = usersServices.findUserByUsername(username);
         
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: `User not found`
-            });
-        } else {
-            usersServices.deleteUser(username);
+        // if (!user) {
+        //     return res.status(404).json({
+        //         success: false,
+        //         message: `User not found`
+        //     });
+        // } else {
+        //     usersServices.deleteUser(username);
 
-            return res.status(201).json({
-                success: true,
-                message: `User ${username} deleted.`
-            });
-        }
+        //     return res.status(201).json({
+        //         success: true,
+        //         message: `User ${username} deleted.`
+        //     });
+        // }
     }
 };
 

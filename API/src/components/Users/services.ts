@@ -1,4 +1,3 @@
-import { usersFromDB } from "../../mockData";
 import { UserInterface } from "./interfaces";
 import getDataFromDB from "../../functions";
 
@@ -16,29 +15,29 @@ const usersServices = {
         //console.log(users);
         return users;
     },
-    createUser: (user: UserInterface): boolean => {
-        const newUser: UserInterface = {
-            email: user.email,
-            password: user.password,
-            username: user.username
-        };
+    // createUser: (user: UserInterface): boolean => {
+    //     const newUser: UserInterface = {
+    //         email: user.email,
+    //         password: user.password,
+    //         username: user.username
+    //     };
 
-        let newUserExists: UserInterface | undefined = usersFromDB.find(element => element.username === user.username);
+    //     let newUserExists: UserInterface | undefined = usersFromDB.find(element => element.username === user.username);
         
-        if (newUserExists) {
-            return false;
-        } else {
-            // või lisame andmebaasi
-            usersFromDB.push(newUser);
-            //console.log(users);
-            return true;
-        }
-    },
-    deleteUser: (username: string) => {
-        usersFromDB.filter(element => element.username === username);
+    //     if (newUserExists) {
+    //         return false;
+    //     } else {
+    //         // või lisame andmebaasi
+    //         usersFromDB.push(newUser);
+    //         //console.log(users);
+    //         return true;
+    //     }
+    // },
+    // deleteUser: (username: string) => {
+    //     usersFromDB.filter(element => element.username === username);
 
-        console.log(usersFromDB);
-    }
+    //     console.log(usersFromDB);
+    // }
 };
 
 export default usersServices;

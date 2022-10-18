@@ -61,21 +61,21 @@ app.get('/api/v1/movies&id=:id', moviesControllers.getMoviesById);
 
 app.post('/api/v1/movies', globalMiddlewares.checkCreationData('movies'), moviesControllers.createMovie);
 
-app.delete('/api/v1/movies&id=:id', moviesControllers.deleteMovie);
+// app.delete('/api/v1/movies&id=:id', moviesControllers.deleteMovie);
 
 /* 
 telesaadete
 blokk
 */
-app.get('/api/v1/tvseries', tvSeriesControllers.getAllTvSeries);
+// app.get('/api/v1/tvseries', tvSeriesControllers.getAllTvSeries);
 
-app.get('/api/v1/tvseries/:titleKeyword', tvSeriesControllers.getTvSeriesTitlesByKeyword);
+// app.get('/api/v1/tvseries/:titleKeyword', tvSeriesControllers.getTvSeriesTitlesByKeyword);
 
-app.get('/api/v1/tvseries&id=:id', tvSeriesControllers.getTvSeriesById);
+// app.get('/api/v1/tvseries&id=:id', tvSeriesControllers.getTvSeriesById);
 
 app.post('/api/v1/tvseries', globalMiddlewares.checkCreationData('tvseries'), tvSeriesControllers.createTvSeries);
 
-app.delete('/api/v1/tvseries&id=:id', tvSeriesControllers.deleteTvSeries);
+// app.delete('/api/v1/tvseries&id=:id', tvSeriesControllers.deleteTvSeries);
 
 app.listen(PORT, () => { console.log('Server is running'); });
 

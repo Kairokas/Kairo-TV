@@ -69,25 +69,25 @@ const moviesControllers = {
         //     });
         // }
     },
-    deleteMovie: async (req: Request, res: Response) => {
-        const id = parseInt(req.params.id);
+    // deleteMovie: async (req: Request, res: Response) => {
+    //     const id = parseInt(req.params.id);
 
-        let movie = movieServices.findMovieById(id);
+    //     let movie = movieServices.findMovieById(id);
         
-        if (!movie) {
-            return res.status(404).json({
-                success: false,
-                message: `Movie not found`
-            });
-        } else {
-            movieServices.deleteMovie(id);
+    //     if (!movie) {
+    //         return res.status(404).json({
+    //             success: false,
+    //             message: `Movie not found`
+    //         });
+    //     } else {
+    //         movieServices.deleteMovie(id);
 
-            return res.status(201).json({
-                success: true,
-                message: `Movie ${movie} deleted.`
-            });
-        }
-    }
+    //         return res.status(201).json({
+    //             success: true,
+    //             message: `Movie ${movie} deleted.`
+    //         });
+    //     }
+    // }
 };
 
 export default moviesControllers;

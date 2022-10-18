@@ -31,28 +31,30 @@ services:
       - 3000:3000
     environment:
       DEBUG: nodejs-docker-express:*
-    depends_on:
-      - database
 
-  # node-front-end:
+  node-front:
+    container_name: kairo-tv-node-front
+    build:
+      context: ./
+      dockerfile: nodeFront.Dockerfile
+    volumes:
+      # et automaatne restart toimuks arendamisel
+      - ./kairo-tv-front:/public
+      # vastasel juhul ei saa me Dockerfile's installitut kasutada
+      - /public/node_modules
+    #command: npm run start:dev
+    ports:
+      - 80:3000
+    environment:
+      # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
+      WATCHPACK_POLLING: "true"
+
+  # front-end:
   #   container_name: kairo-tv-front
   #   build:
   #     context: ./
-  #     dockerfile: nodefront.Dockerfile
+  #     dockerfile: front.Dockerfile
   #   volumes:
-  #     - ./react-front:/usr/src/
-  #   #command: npm run start:dev
+  #    - ./react-front:/usr/share/nginx/html
   #   ports:
-  #     - 80:3000
-  #   environment:
-  #     DEBUG: nodejs-docker-express:*
-
-  front-end:
-    container_name: kairo-tv-front
-    build:
-      context: ./
-      dockerfile: front.Dockerfile
-    volumes:
-     - ./react-front:/usr/share/nginx/html
-    ports:
-      - 80:80
+  #     - 80:80
