@@ -11,53 +11,64 @@ const pool = mariadb.createPool({
     supportBigNumbers: true
 });
 
-async function getDataFromDB(query: string) {
+export async function getDataFromDB(query: string) {
     let conn;
 
     try {
         conn = await pool.getConnection();
         const rows = await conn.query(query);
         // rows: [ {val: 1}, meta: ... ]
-    
+
         //const res = await conn.query("INSERT INTO myTable value (?, ?)", [1, "mariadb"]);
         // res: { affectedRows: 1, insertId: 1, warningStatus: 0 }
-        return rows;
+
+        if (rows.length === 0) {
+            return;
+        } else {
+            return rows;
+        }
     } catch (err) {
         console.log(`DB error: ${err}`);
     } finally {
         if (conn) conn.release(); //release to pool
     }
-  }
+}
 
-// async function getDataFromDB(query: string) {
-//     let conn;
-//     let rows; 
+export async function insertDataToDB(query: string, data:any) {
+    let conn;
 
-//     // console.log(process.env);
-//     const pool = mariadb.createPool({
-//         host: process.env.APP_DB_HOST,
-//         user: process.env.APP_DB_USER,
-//         password: process.env.APP_DB_PASSWORD,
-//         database: process.env.DB_NAME,
-//         // alloleva puudumisel saame JS jsoniks muutmisel errori: "TypeError: Do not know how to serialize a BigInt"
-//         supportBigNumbers: true
-//     });
+    try {
+        conn = await pool.getConnection();
+        //const rows = await conn.query(query);
+        // rows: [ {val: 1}, meta: ... ]
 
-//     try {
-//         conn = await pool.getConnection();
-//         rows = await conn.query(query);
-//         //console.log(rows); //[ {val: 1}, meta: ... ]
-//         //const res = await conn.query("INSERT INTO myTable value (?, ?)", [1, "mariadb"]);
+        const res = await conn.query(query, data);
+        // res: { affectedRows: 1, insertId: 1, warningStatus: 0 }
+        return res;
+    } catch (err) {
+        console.log(`DB error: ${err}`);
+    } finally {
+        if (conn) conn.release(); //release to pool
+    }
+}
 
-//         delete rows.meta;
-//         //console.log(rows);
-//     } catch (err) {
-//         console.log(`DB error: ${err}`);
-//         return err;
-//     } finally {
-//         if (conn) return conn.end();        
-//     }
-// }
+export async function deleteDataFromDB(query: string) {
+    let conn;
+
+    try {
+        conn = await pool.getConnection();
+        //const rows = await conn.query(query);
+        // rows: [ {val: 1}, meta: ... ]
+
+        const res = await conn.query(query);
+        // res: { affectedRows: 1, insertId: 1, warningStatus: 0 }
+        return res;
+    } catch (err) {
+        console.log(`DB error: ${err}`);
+    } finally {
+        if (conn) conn.release(); //release to pool
+    }
+}
 
 function GetJSONFileContents(confFile: string) {
     const rawdata = fs.readFileSync(confFile, 'utf8');
@@ -66,5 +77,3 @@ function GetJSONFileContents(confFile: string) {
 
     return JSONData;
 }
-
-export default getDataFromDB;

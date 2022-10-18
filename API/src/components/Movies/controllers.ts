@@ -16,7 +16,7 @@ const moviesControllers = {
         const keyword = req.params.titleKeyword;
         let movies = await movieServices.findMoviesByKeyword(keyword);
         
-        if (movies.length == 0) {
+        if (!movies) {
             return res.status(404).json({
                 success: false,
                 message: `No movie titles match your searched keyword.`
@@ -33,7 +33,7 @@ const moviesControllers = {
         const id = parseInt(req.params.id);
         let movie = await movieServices.findMovieById(id);
 
-        if (!movie || movie.length == 0) {
+        if (!movie) {
             return res.status(404).json({
                 success: false,
                 message: `Movie not found`
@@ -47,47 +47,46 @@ const moviesControllers = {
         });
     },
     createMovie: async (req: Request, res: Response) => {
-        const { id, movieTitle, releaseYear, locationURI, price } = req.body;
+        const { movieTitle, releaseYear, locationURI, price } = req.body;
 
         const newMovie: MovieInterface = {
-            id,
             movieTitle,
             releaseYear,
             locationURI,
             price
         };
 
-        // if (movieServices.createMovie(newMovie)) {
-        //     return res.status(201).json({
-        //         success: true,
-        //         message: `Movie with title ${movieTitle} created`,
-        //     });
-        // } else {
-        //     return res.status(400).json({
-        //         success: false,
-        //         message: `Movie with title ${movieTitle} already exists`
-        //     });
-        // }
+        if (await movieServices.createMovie(newMovie)) {
+            return res.status(201).json({
+                success: true,
+                message: `Movie with title ${movieTitle} created`,
+            });
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: `Movie with title ${movieTitle} already exists`
+            });
+        }
     },
-    // deleteMovie: async (req: Request, res: Response) => {
-    //     const id = parseInt(req.params.id);
+    deleteMovie: async (req: Request, res: Response) => {
+        const id = parseInt(req.params.id);
 
-    //     let movie = movieServices.findMovieById(id);
+        let movie = await movieServices.findMovieById(id);
         
-    //     if (!movie) {
-    //         return res.status(404).json({
-    //             success: false,
-    //             message: `Movie not found`
-    //         });
-    //     } else {
-    //         movieServices.deleteMovie(id);
+        if (!movie) {
+            return res.status(404).json({
+                success: false,
+                message: `Movie not found`
+            });
+        } else {
+            movieServices.deleteMovie(id);
 
-    //         return res.status(201).json({
-    //             success: true,
-    //             message: `Movie ${movie} deleted.`
-    //         });
-    //     }
-    // }
+            return res.status(201).json({
+                success: true,
+                message: `Movie with ID ${id} deleted.`
+            });
+        }
+    }
 };
 
 export default moviesControllers;

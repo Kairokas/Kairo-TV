@@ -45,7 +45,7 @@ app.post('/api/v1/users', globalMiddlewares.checkCreationData('users'), usersCon
 // kustuta kasutaja
 app.delete('/api/v1/users/:username', usersControllers.deleteUser);
 // nii oleks VB parem isegi olnud
-//app.delete('/api/v1/users:username', usersControllers.deleteUser);
+// app.delete('/api/v1/users:username', usersControllers.deleteUser);
 
 /* 
 filmide
@@ -54,30 +54,31 @@ blokk
 app.get('/api/v1/movies', moviesControllers.getAllMovies);
 
 // Filmide pärimine pealkirja sisu järgi
-// Keyword, sest tagastatalse kik filmid, mis sisaldavad pealkirjas otsitavat
+// Keyword, sest tagastatalse kõik filmid, mis sisaldavad pealkirjas otsitavat
 app.get('/api/v1/movies/:titleKeyword', moviesControllers.getMovieTitlesByKeyword);
 
 app.get('/api/v1/movies&id=:id', moviesControllers.getMoviesById);
 
 app.post('/api/v1/movies', globalMiddlewares.checkCreationData('movies'), moviesControllers.createMovie);
 
-// app.delete('/api/v1/movies&id=:id', moviesControllers.deleteMovie);
+app.delete('/api/v1/movies&id=:id', moviesControllers.deleteMovie);
 
 /* 
 telesaadete
 blokk
 */
-// app.get('/api/v1/tvseries', tvSeriesControllers.getAllTvSeries);
+app.get('/api/v1/tvseries', tvSeriesControllers.getAllTvSeries);
 
-// app.get('/api/v1/tvseries/:titleKeyword', tvSeriesControllers.getTvSeriesTitlesByKeyword);
+app.get('/api/v1/tvseries/:titleKeyword', tvSeriesControllers.getTvSeriesTitlesByKeyword);
 
-// app.get('/api/v1/tvseries&id=:id', tvSeriesControllers.getTvSeriesById);
+app.get('/api/v1/tvseries&id=:id', tvSeriesControllers.getTvSeriesById);
 
 app.post('/api/v1/tvseries', globalMiddlewares.checkCreationData('tvseries'), tvSeriesControllers.createTvSeries);
 
-// app.delete('/api/v1/tvseries&id=:id', tvSeriesControllers.deleteTvSeries);
+app.delete('/api/v1/tvseries&id=:id', tvSeriesControllers.deleteTvSeries);
 
 app.listen(PORT, () => { console.log('Server is running'); });
 
 // TODO
 // patch päringud andmete muutmiseks
+// testida kõik route'd

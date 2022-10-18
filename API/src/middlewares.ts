@@ -26,9 +26,9 @@ const globalMiddlewares = {
     
                 next();
             } else if (resource === "tvseries") {
-                const { seriesTitle, releaseYear, episodes, locationURI, price } = req.body;
+                const { seriesTitle, releaseYear, episodes, seasons, locationURI, price } = req.body;
     
-                if (!seriesTitle || !releaseYear || !episodes || !locationURI  || !price) {
+                if (!seriesTitle || !releaseYear || !episodes || !seasons || !locationURI  || !price) {
                     return res.status(400).json({
                         success: false,
                         message: `Some data is missing (seriesTitle, releaseYear, episodes, locationURI, price)`

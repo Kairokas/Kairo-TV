@@ -1,5 +1,5 @@
 import { MovieInterface } from "./interfaces";
-import getDataFromDB from "../../functions";
+import { getDataFromDB, insertDataToDB, deleteDataFromDB } from "../../functions";
 
 const moviesServices = {
     findAllMovies: async () => {
@@ -12,30 +12,32 @@ const moviesServices = {
         
         return matchingMovies;
     },
-    // createMovie: async (movie: MovieInterface) => {
-    //     let newMovieExists: MovieInterface | undefined = moviesFromDB.find(element => element.movieTitle === movie.movieTitle);
-        
-    //     if (newMovieExists) {
-    //         return false;
-    //     } else {
-    //         // või lisame andmebaasi
-    //         moviesFromDB.push(movie);
+    createMovie: async (movie: MovieInterface) => {
+        const newMovie: MovieInterface = {
+            movieTitle: movie.movieTitle,
+            releaseYear: movie.releaseYear,
+            locationURI: movie.locationURI,
+            price: movie.price
+        }
 
-    //         return true;
-    //     }
-    // },
+        let newMovieExists = await getDataFromDB(`SELECT * FROM Movies WHERE Title = '${movie.movieTitle}'`);
+        
+        if (newMovieExists) {
+            return false;
+        } else {
+            insertDataToDB("INSERT INTO Movies value (?, ?, ?, ?)", [movie.movieTitle, movie.releaseYear, movie.locationURI, movie.price]);
+
+            return true;
+        }
+    },
     findMovieById: async (id: number) => {
         let movie = await getDataFromDB(`SELECT * FROM Movies WHERE ID = ${id}`);
         
         return movie;
     },
-    // deleteMovie: async (id: number) => {
-    //     // peaksime tegelt andmebaasist kustutama
-    //     //
-    //     const newMoviesFromDB = moviesFromDB.filter(element => !(element.id === id));
-
-    //     console.log(newMoviesFromDB);
-    // }
+    deleteMovie: async (id: number) => {
+        deleteDataFromDB(`DELETE FROM Movies WHERE ID = '${id}'`)
+    }
 }
 
 export default moviesServices;

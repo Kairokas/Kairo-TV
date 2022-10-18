@@ -13,6 +13,16 @@ create table Movies (
     Price int not null
 );
 
+create table TvSeries (
+	ID BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    Title varchar(100) not null,
+    ReleaseYear int,
+    Episodes int,
+    Seasons int,
+    LocationURI varchar(200),
+    Price int not null
+);
+
 insert into Users (Username, Password, Email) values ('anehls0', 'VSjkzibw', 'lrawsen0@goo.gl');
 insert into Users (Username, Password, Email) values ('samery1', 'FWHqEjal', 'rgearty1@house.gov');
 insert into Users (Username, Password, Email) values ('pware2', 'JRFU24', 'gkenewell2@geocities.jp');
@@ -114,3 +124,54 @@ insert into Movies (Title, ReleaseYear, LocationURI, Price) values ('Five Obstru
 insert into Movies (Title, ReleaseYear, LocationURI, Price) values ('Return of Jafar, The', 2000, 'https://samsung.com/mauris.aspx', 97.8);
 insert into Movies (Title, ReleaseYear, LocationURI, Price) values ('Gideon''s Army', 2004, 'http://shinystat.com/ac/nibh/fusce/lacus/purus/aliquet/at.aspx', 52.48);
 insert into Movies (Title, ReleaseYear, LocationURI, Price) values ('Remonstrance', 1994, 'http://harvard.edu/nunc/purus/phasellus.aspx', 52.9);
+
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Terror, The', 2004, 836, 30, 'https://opensource.org/ipsum/dolor/sit/amet/consectetuer/adipiscing.html', 16.47);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('No Flesh Shall Be Spared', 2002, 950, 6, 'http://howstuffworks.com/neque/sapien/placerat/ante.jsp', 46.97);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Fear and Loathing in Las Vegas', 2011, 84, 1, 'https://mlb.com/eu/mi/nulla.aspx', 42.32);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Meatballs', 1987, 624, 41, 'http://instagram.com/non/ligula/pellentesque/ultrices/phasellus/id/sapien.jsp', 33.48);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Fighter, The', 1992, 383, 19, 'https://typepad.com/lectus/vestibulum/quam/sapien.jsp', 46.67);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Amore (L''Amore)', 2006, 147, 7, 'http://sourceforge.net/sollicitudin/vitae/consectetuer.png', 33.09);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Man with an Apartment (Czlowiek z M-3)', 1988, 797, 30, 'http://typepad.com/in.js', 14.97);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Pyrates', 1994, 275, 36, 'http://github.io/nisl/nunc.jsp', 4.97);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Hood of Horror', 1998, 76, 15, 'https://fema.gov/porttitor/pede/justo/eu/massa.jpg', 37.44);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Kummelin jackpot', 1999, 41, 38, 'http://cdc.gov/mauris/vulputate/elementum/nullam.xml', 32.5);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Love is God', 2011, 675, 39, 'http://yahoo.co.jp/habitasse/platea/dictumst/morbi/vestibulum/velit.json', 13.45);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Myra Breckinridge', 1993, 9, 39, 'https://comcast.net/in/ante/vestibulum/ante/ipsum/primis.js', 17.46);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Rancho Deluxe', 2003, 408, 20, 'https://deviantart.com/ligula/nec.js', 21.84);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('How the Myth Was Made: A Study of Robert Flaherty''s Man of Aran', 1999, 638, 25, 'https://squarespace.com/nam/tristique/tortor/eu.html', 27.77);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Shogun''s Ninja (Ninja bugeicho momochi sandayu)', 2010, 506, 16, 'https://usatoday.com/sit/amet/consectetuer/adipiscing.jpg', 40.09);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Frontière(s)', 2010, 636, 40, 'https://squarespace.com/dolor/morbi/vel/lectus.jpg', 20.35);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('After the Rehearsal (Efter repetitionen)', 2007, 101, 3, 'http://usatoday.com/nam/dui/proin/leo/odio/porttitor/id.js', 14.99);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Arrowhead', 1991, 249, 13, 'https://goodreads.com/curae/mauris/viverra.aspx', 7.52);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Over the Hedge', 1974, 248, 45, 'https://skype.com/consequat/nulla.aspx', 10.0);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Peeping Tom', 2005, 761, 9, 'http://ezinearticles.com/purus/phasellus.js', 23.62);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Dragon Day', 1996, 28, 11, 'https://columbia.edu/mauris/sit/amet.jsp', 44.73);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('1984 (Nineteen Eighty-Four)', 2009, 653, 36, 'http://washingtonpost.com/egestas.js', 33.37);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('On a Clear Day', 2011, 515, 28, 'https://fc2.com/magna/ac/consequat/metus/sapien.jpg', 11.43);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Rosemary''s Baby', 2000, 838, 34, 'https://cafepress.com/pellentesque/at.jpg', 38.26);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Your Highness', 2007, 609, 24, 'https://digg.com/et.html', 37.43);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('T.N.T.', 1995, 759, 30, 'http://imageshack.us/at/ipsum/ac/tellus/semper/interdum/mauris.html', 48.27);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('For Love of the Game', 1993, 788, 50, 'https://forbes.com/rhoncus/sed/vestibulum/sit/amet.html', 16.37);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Victim', 2007, 983, 38, 'http://qq.com/vulputate/nonummy/maecenas/tincidunt.aspx', 8.44);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Stunt Man, The', 1993, 614, 21, 'http://geocities.jp/leo/odio/condimentum/id.html', 11.14);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Raisin in the Sun, A', 2004, 26, 31, 'http://engadget.com/amet/eleifend/pede/libero/quis.jpg', 40.36);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Why Me?', 1992, 408, 42, 'https://mayoclinic.com/in/faucibus/orci/luctus/et/ultrices.js', 22.13);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Frozen Hell (Jäämarssi) ', 2009, 443, 28, 'https://goo.gl/vitae/nisl/aenean/lectus/pellentesque/eget/nunc.jpg', 35.87);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Little Darlings', 1994, 609, 19, 'https://microsoft.com/risus/auctor/sed/tristique.jsp', 35.33);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Caroline?', 1999, 292, 2, 'http://clickbank.net/massa/donec/dapibus.aspx', 30.88);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Glass House, The', 2011, 381, 40, 'http://facebook.com/ut.png', 49.71);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Silent Night, Deadly Night 5: The Toy Maker', 2004, 891, 4, 'http://wsj.com/amet/eleifend/pede/libero/quis/orci/nullam.aspx', 1.87);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Oceans (Océans)', 2010, 695, 47, 'http://seattletimes.com/ullamcorper/purus/sit/amet/nulla.jpg', 32.11);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Out of Balance: ExxonMobil''s Impact on Climate Change', 2005, 478, 44, 'http://furl.net/libero/nullam/sit/amet/turpis/elementum.json', 12.68);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Dancing Hawk, The (Tanczacy jastrzab)', 1999, 206, 21, 'https://sina.com.cn/sit/amet/diam/in/magna/bibendum.jpg', 41.51);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Mademoiselle Chambon', 2012, 823, 25, 'https://mapy.cz/quam/pharetra/magna.jsp', 18.72);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Goalie''s Anxiety at the Penalty Kick, The (Die Angst des Tormanns beim Elfmeter)', 1999, 816, 24, 'http://opera.com/consequat/ut/nulla/sed.png', 46.6);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Barbershop 2: Back in Business', 2011, 986, 44, 'http://phpbb.com/pellentesque/at/nulla/suspendisse/potenti/cras/in.xml', 6.14);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Only the Strong Survive - A Celebration of Soul', 2011, 120, 8, 'http://tmall.com/ac.html', 3.89);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Kaena: The Prophecy (Kaena: La prophétie)', 1986, 253, 35, 'http://ebay.com/hac/habitasse/platea.json', 18.35);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Fuse (Gori vatra)', 1993, 53, 16, 'http://hhs.gov/odio/odio.html', 33.06);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Lady in a Cage', 1993, 382, 50, 'https://dagondesign.com/nunc/vestibulum/ante/ipsum/primis/in/faucibus.js', 29.2);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Allegheny Uprising', 2005, 331, 18, 'http://elegantthemes.com/consequat/lectus.jpg', 17.93);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Raising Helen', 2001, 624, 47, 'http://ovh.net/odio.json', 33.77);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Made in Dagenham', 2003, 319, 33, 'http://hexun.com/ligula/in/lacus.jpg', 36.39);
+insert into TvSeries (Title, ReleaseYear, Episodes, Seasons, LocationURI, Price) values ('Welcome to the Sticks (Bienvenue chez les Ch''tis)', 2002, 687, 29, 'http://reuters.com/eget/vulputate/ut/ultrices/vel/augue.aspx', 1.11);

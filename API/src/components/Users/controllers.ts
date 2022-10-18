@@ -16,7 +16,7 @@ const usersControllers = {
         const username = req.params.username;
         let user = await usersServices.findUserByUsername(username);
         
-        if (!user || user.length == 0) {
+        if (!user) {
             return res.status(404).json({
                 success: false,
                 message: `User not found`
@@ -29,7 +29,7 @@ const usersControllers = {
             });
         }
     },
-    createUser: (req: Request, res: Response) => {
+    createUser: async (req: Request, res: Response) => {
         const { email, password, username } = req.body;
 
         const newUser: UserInterface = {
@@ -38,36 +38,44 @@ const usersControllers = {
             username
         };
 
-        // if (usersServices.createUser(newUser)) {
-        //     return res.status(201).json({
-        //         success: true,
-        //         message: `User with username ${username} created`,
-        //     });
-        // } else {
-        //     return res.status(400).json({
-        //         success: false,
-        //         message: `User with username ${username} already exists`
-        //     });
-        // }
+        if (usersServices.checkPWCompatibility(password)) {
+            if (await usersServices.createUser(newUser)) {
+            
+                return res.status(201).json({
+                    success: true,
+                    message: `User with username ${username} created`,
+                });
+            } else {
+                return res.status(400).json({
+                    success: false,
+                    message: `User with username ${username} already exists`
+                });
+            }
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: `Password doesn't meet it's requirements (8 characters, 1 uppercase letter and 1 symbol)`
+            });
+        }
     },
-    deleteUser: (req: Request, res: Response) => {
+    deleteUser: async (req: Request, res: Response) => {
         const username = req.params.username;
 
-        let user = usersServices.findUserByUsername(username);
+        let user = await usersServices.findUserByUsername(username);
         
-        // if (!user) {
-        //     return res.status(404).json({
-        //         success: false,
-        //         message: `User not found`
-        //     });
-        // } else {
-        //     usersServices.deleteUser(username);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: `User not found`
+            });
+        } else {
+            usersServices.deleteUser(username);
 
-        //     return res.status(201).json({
-        //         success: true,
-        //         message: `User ${username} deleted.`
-        //     });
-        // }
+            return res.status(201).json({
+                success: true,
+                message: `User ${username} deleted.`
+            });
+        }
     }
 };
 
