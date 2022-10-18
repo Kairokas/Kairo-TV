@@ -1,4 +1,4 @@
-# API, kuhu tulemas peagi ka SQL ja ReactJS front end
+# Kairo TV - kooliprojekt (so far..)
 
 ## Esmakordne käivitus:
 docker-compose build 
@@ -10,11 +10,14 @@ docker-compose up - kui pole muudatusi Dockerfiles jms..
 ### projektikaustas on vajalik .env faili olemasolu sisuga (Kasutajakontol on rohkem õigusi kui vaja):
 DB_USER=exampleusername
 DB_PASSWORD=examplepass
-DB_NAME=exmapledatabasename
+DB_NAME=exampledatabasename
 SERVER_HOST=exampleserver
 MARIADB_ROOT_PASSWORD=examplerootpw
+APP_DB_USER=exampleuser
+APP_DB_PASSWORD=examplepass
+APP_DB_HOST=examplecontainername - docker-compose DB konteineri nimi
 
-Eraldi tuleb teha fronti suhtluse jaoks kasutajakonto, millel on ainult tabeli piires õigused
+Eraldi tuleb teha fronti suhtluse jaoks DB kasutajakonto, millel on ainult tabeli piires õigused
 
 ## muid kasulikke käske
 docker compose run service_name bash - service_name tuleneb defineeritud docker-compose.yml failist, käsk käivitab konteineri bashi
