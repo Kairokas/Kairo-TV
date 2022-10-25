@@ -4,6 +4,15 @@ interface UserInterface {
     password: string;
 };
 
+interface UserInterfaceFromDB extends UserInterface {
+    id: number;
+};
+
+interface UserInterfaceWithRolesFromDB {
+    username: string;
+    roles: string[];
+}
+
 interface RentedContentInterface {
     //UserID
     //MovieID
@@ -13,4 +22,4 @@ interface RentedContentInterface {
     amountPaid: number;
 };
 
-export { UserInterface, RentedContentInterface };
+export { UserInterface, RentedContentInterface, UserInterfaceFromDB, UserInterfaceWithRolesFromDB };

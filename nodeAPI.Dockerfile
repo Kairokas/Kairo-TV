@@ -13,6 +13,10 @@ RUN npm i --save express
 RUN npm i --save @types/express
 RUN npm i cors
 RUN npm i mariadb
+RUN npm i bcrypt
+RUN npm i --save-dev @types/bcrypt
+RUN npm i jsonwebtoken
+RUN npm i --save-dev @types/jsonwebtoken
 
 # RUN apt-get update && apt-get install -y telnet
 

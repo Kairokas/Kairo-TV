@@ -25,6 +25,9 @@ export async function getDataFromDB(query: string) {
         if (rows.length === 0) {
             return;
         } else {
+            // ei vaja metadatat
+            delete rows.meta;
+
             return rows;
         }
     } catch (err) {

@@ -1,17 +1,34 @@
-import { UserInterface } from "./interfaces";
+import { UserInterface, UserInterfaceFromDB, UserInterfaceWithRolesFromDB } from "./interfaces";
 import { getDataFromDB, insertDataToDB, deleteDataFromDB } from "../../functions";
 
 const usersServices = {
     findUserByUsername: async (username: string) => {
-        let user = await getDataFromDB(`SELECT email, username FROM Users WHERE username = '${username}'`);
+        // siin teeme joini users ja rollide vahel, et teada saada kasutaja õigused
+        let user:UserInterfaceFromDB | undefined = await getDataFromDB(`SELECT email, username, password FROM User WHERE username = '${username}'`);
         //console.log(user);
         //let user = usersFromDB.find(element => element.username === username);
 
         //let user: UserInterface | undefined = data;
         return user;
     },
+    getUserRoles: async (username: string) => {
+        let roles:string[] = [];
+        let id:number;
+        let userRolesRows:string[] = await getDataFromDB(`SELECT UserID, Username, Rolename FROM UserRoles WHERE username = '${username}'`);
+        //console.log(userRolesRows);
+
+        userRolesRows.map((row:any) => {roles.push(row.RoleName); id = row.UserID;});
+
+        const userRoles: UserInterfaceWithRolesFromDB = {
+            username: username,
+            roles: roles
+        };
+
+        return userRoles;
+        //userRowsWithRoles.map(row => {roles.push(row.RoleName)});
+    },
     getAllUsers: async () => {
-        let users = await getDataFromDB(`SELECT email, username FROM Users`);
+        let users = await getDataFromDB(`SELECT email, username FROM User`);
         //console.log(users);
         return users;
     },
@@ -22,7 +39,7 @@ const usersServices = {
             username: user.username
         };
 
-        let newUserExists = await getDataFromDB(`SELECT email, username FROM Users WHERE username = '${user.username}'`);
+        let newUserExists = await getDataFromDB(`SELECT email, username FROM User WHERE username = '${newUser.username}'`);
         
         if (newUserExists) {
             return false;

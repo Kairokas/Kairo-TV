@@ -3,12 +3,12 @@ import { getDataFromDB, insertDataToDB, deleteDataFromDB } from "../../functions
 
 const tvSeriesServices = {
     findAllTvSeries: async () => {
-        let tvSeries = await getDataFromDB(`SELECT * FROM TvSeries`);
+        let tvSeries = await getDataFromDB(`SELECT * FROM TvSerie`);
 
         return tvSeries;
     },
     findTvSeriesByKeyword: async (keyword: string) => {
-        let matchingTvSeries = await getDataFromDB(`SELECT * FROM TvSeries WHERE Title LIKE '%${keyword}%'`);
+        let matchingTvSeries = await getDataFromDB(`SELECT * FROM TvSerie WHERE Title LIKE '%${keyword}%'`);
         
         return matchingTvSeries;
     },
@@ -22,12 +22,12 @@ const tvSeriesServices = {
             price: tvSeries.price
         }
 
-        let newTvSeriesExists = await getDataFromDB(`SELECT * FROM TvSeries WHERE Title = '${tvSeries.seriesTitle}'`);
+        let newTvSeriesExists = await getDataFromDB(`SELECT * FROM TvSerie WHERE Title = '${tvSeries.seriesTitle}'`);
         
         if (newTvSeriesExists) {
             return false;
         } else {
-            insertDataToDB("INSERT INTO TvSeries value (?, ?, ?, ?, ?, ?)", [tvSeries.seriesTitle, tvSeries.releaseYear, tvSeries.episodes, tvSeries.seasons, tvSeries.locationURI, tvSeries.price]);
+            insertDataToDB("INSERT INTO TvSerie value (?, ?, ?, ?, ?, ?)", [tvSeries.seriesTitle, tvSeries.releaseYear, tvSeries.episodes, tvSeries.seasons, tvSeries.locationURI, tvSeries.price]);
 
             return true;
         }
