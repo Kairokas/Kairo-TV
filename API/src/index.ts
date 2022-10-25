@@ -46,7 +46,7 @@ app.get('/api/v1/users', globalMiddlewares.isLoggedIn, usersControllers.getAllUs
 app.get('/api/v1/users/:username',  globalMiddlewares.isLoggedIn, usersControllers.getUserByUsername);
 
 // lisa uus kasutaja
-app.post('/api/v1/users', globalMiddlewares.isLoggedIn, globalMiddlewares.isAdmin, globalMiddlewares.checkCreationData('users'), usersControllers.createUser);
+app.post('/api/v1/users', globalMiddlewares.isLoggedIn, globalMiddlewares.checkCreationData('users'), usersControllers.createUser);
 
 // kustuta kasutaja
 app.delete('/api/v1/users/:username', globalMiddlewares.isLoggedIn, globalMiddlewares.isAdmin, usersControllers.deleteUser);
