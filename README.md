@@ -1,6 +1,6 @@
 # Kairo TV - kooliprojekt (so far..)
 Veebilehe eesmärk on videostriimimine sarnaselt Netflixile/Go3 vms..  
-Antud lahenduses on kasutusel 3 erinevat teenust, mis jooksevad erikonteinerites: front-end (React), API (Node + TS) ja DB (MariaDB)
+Antud lahenduses on kasutusel 3 erinevat teenust, mis jooksevad erikonteinerites: front-end (Node + React), API (Node + TS) ja DB (MariaDB)
 
 ## Esmakordne käivitus:
 docker-compose build 
@@ -9,12 +9,11 @@ docker-compose up
 docker-compose down -v - kustutab olemasoleavad konteinerid
 docker-compose up - kui pole muudatusi Dockerfiles jms..
 
-### projektikaustas olevad .envEXAMPLE tuleb muuta .env (Kasutajakontol on rohkem õigusi kui vaja):
+### projektikaustas olev .envEXAMPLE tuleb muuta .env (Kasutajakontol on rohkem õigusi kui vaja):
 Eraldi tuleb teha fronti suhtluse jaoks DB kasutajakonto, millel on ainult tabeli piires õigused  
 
 ## muid kasulikke käske
-docker compose run service_name bash - service_name tuleneb defineeritud  
-docker-compose.yml failist, käsk käivitab konteineri bashi  
+docker compose run service_name bash - service_name tuleneb defineeritud docker-compose.yml failist, käsk käivitab ette antud konteineri bashi  
 
 ## API oskab töödelda:
 ### Enne igasugust tööd on vajalik ennast autentima, andmete muutmisel ja lisamisel on vajalik administraatori õigused
