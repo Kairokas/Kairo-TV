@@ -1,4 +1,6 @@
 # Kairo TV - kooliprojekt (so far..)
+Veebilehe eesmärk on videostriimimine sarnaselt Netflixile/Go3 vms..  
+Antud lahenduses on kasutusel 3 erinevat teenust, mis jooksevad erikonteinerites: front-end (React), API (Node + TS) ja DB (MariaDB)
 
 ## Esmakordne käivitus:
 docker-compose build 
@@ -7,22 +9,12 @@ docker-compose up
 docker-compose down -v - kustutab olemasoleavad konteinerid
 docker-compose up - kui pole muudatusi Dockerfiles jms..
 
-### projektikaustas on vajalik .env faili olemasolu sisuga (Kasutajakontol on rohkem õigusi kui vaja):
-DB_USER=exampleusername
-DB_PASSWORD=examplepass
-DB_NAME=exampledatabasename
-SERVER_HOST=exampleserver
-MARIADB_ROOT_PASSWORD=examplerootpw
-APP_DB_USER=exampleuser
-APP_DB_PASSWORD=examplepass
-APP_DB_HOST=examplecontainername - docker-compose DB konteineri nimi
-JWT_PASSWORD=examplestring/examplehash
-SALT_ROUNDS=examplenumber
-
-Eraldi tuleb teha fronti suhtluse jaoks DB kasutajakonto, millel on ainult tabeli piires õigused
+### projektikaustas olevad .envEXAMPLE tuleb muuta .env (Kasutajakontol on rohkem õigusi kui vaja):
+Eraldi tuleb teha fronti suhtluse jaoks DB kasutajakonto, millel on ainult tabeli piires õigused  
 
 ## muid kasulikke käske
-docker compose run service_name bash - service_name tuleneb defineeritud docker-compose.yml failist, käsk käivitab konteineri bashi
+docker compose run service_name bash - service_name tuleneb defineeritud  
+docker-compose.yml failist, käsk käivitab konteineri bashi  
 
 ## API oskab töödelda:
 ### Enne igasugust tööd on vajalik ennast autentima, andmete muutmisel ja lisamisel on vajalik administraatori õigused
@@ -51,12 +43,8 @@ DELETE localhost:3000/api/v1/tvseries&id={id}
 
 That's it folks!  
 
-Kyssad  
+### Kyssad  
 Kuidas saaks HTML'i elemente "pikendada" reactiga?  
-Kas terve App peab Reactis olema v saab ka teatud divid olla?
 
 ### TODO
-.ENV_EXAMPLE luua  
-Täpsustada, millega tegemist on  
-Body äärtest tumedam, keskelt hele gradient
-App.js left controls paremaga eraldi, et ei peaks kahest kohast eraldi muutma asju
+Body äärtest tumedam, keskelt hele gradient  

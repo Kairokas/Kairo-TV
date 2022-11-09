@@ -1,0 +1,10 @@
+DB_USER=exampleusername
+DB_PASSWORD=examplepass
+DB_NAME=exampledatabasename
+SERVER_HOST=exampleserver
+MARIADB_ROOT_PASSWORD=examplerootpw
+APP_DB_USER=exampleuser
+APP_DB_PASSWORD=examplepass
+APP_DB_HOST=examplecontainername - docker-compose DB konteineri nimi
+JWT_PASSWORD=examplestring/examplehash
+SALT_ROUNDS=examplenumber
