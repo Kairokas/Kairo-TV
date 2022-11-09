@@ -26,7 +26,8 @@ docker compose run service_name bash - service_name tuleneb defineeritud docker-
 
 ## API oskab töödelda:
 ### Enne igasugust tööd on vajalik ennast autentima, andmete muutmisel ja lisamisel on vajalik administraatori õigused
-POST localhost:3000/api/v1/login  
+POST localhost:3000/api/v1/login - tahab väljasid: username, password  
+GET localhost:3000/api/v1/token - tahab Authorization headerit JWT Tokeniga  
 ### peale login'i on vajalik kaasata iga päringuga "Authorization" header, mille väärtuseks tagastatud token
 ### tagastame kõik vasted andmebaasist:
 GET localhost:3000/api/v1/health  
@@ -52,6 +53,10 @@ That's it folks!
 
 Kyssad  
 Kuidas saaks HTML'i elemente "pikendada" reactiga?  
-State jagamine erinevate komponentide vahel  
-Teise faili state laadimine  
-Andmebaasides - kuidas relatsioonilisse tabelisse saaks andmed automaatselt? või peabki ühekaupa sisestama neid?  
+Kas terve App peab Reactis olema v saab ka teatud divid olla?
+
+### TODO
+.ENV_EXAMPLE luua  
+Täpsustada, millega tegemist on  
+Body äärtest tumedam, keskelt hele gradient
+App.js left controls paremaga eraldi, et ei peaks kahest kohast eraldi muutma asju

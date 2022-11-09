@@ -27,22 +27,21 @@ export const loginServices = {
         
         // alloleva eemaldame kui saame hashitud paroolid andmebaasi poole
         // või kui saame front endis kasutajaid andmebaasi lisada/registreerida
-        let fake_pw = await bcrypt.hash('VSjkziw', saltRounds);
+        let fake_pw = await bcrypt.hash('VSjkzibw', saltRounds);
 
         const match = await bcrypt.compare(password, fake_pw);
 
         // kui sisestati vale parool
         if (!match) return false;
         //console.log(match);
-        // const userRoles = await usersServices.getUserRoles(username);
-        const userRoles = ["user", "admin"];
-        // const token = await jwtService.sign(user);
+        const userRoles = await usersServices.getUserRoles(username);
+
         const payload = {
             username: username,
             roles: userRoles
         };
         //console.log(payload);
-        const token = jwt.sign(payload, jwt_password, { expiresIn: '20m' });
+        const token = jwt.sign(payload, jwt_password, { expiresIn: '4h' });
 
         return token;
     }

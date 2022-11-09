@@ -4,7 +4,7 @@ import { getDataFromDB, insertDataToDB, deleteDataFromDB } from "../../functions
 const usersServices = {
     findUserByUsername: async (username: string) => {
         // siin teeme joini users ja rollide vahel, et teada saada kasutaja õigused
-        let user:UserInterfaceFromDB | undefined = await getDataFromDB(`SELECT email, username, password FROM User WHERE username = '${username}'`);
+        let user:UserInterfaceFromDB | undefined = await getDataFromDB(`SELECT email, username, password FROM User WHERE username = ?`, [username]);
         //console.log(user);
         //let user = usersFromDB.find(element => element.username === username);
 
@@ -14,21 +14,19 @@ const usersServices = {
     getUserRoles: async (username: string) => {
         let roles:string[] = [];
         let id:number;
-        let userRolesRows:string[] = await getDataFromDB(`SELECT UserID, Username, Rolename FROM UserRoles WHERE username = '${username}'`);
-        //console.log(userRolesRows);
+        let userRolesRows:string[] = await getDataFromDB(`SELECT Username, Rolename FROM UserRoles WHERE username = ?`, [username]);
 
-        userRolesRows.map((row:any) => {roles.push(row.RoleName); id = row.UserID;});
-
+        userRolesRows.map((row:any) => {roles.push(row.Rolename);});
+        //console.log(roles);
         const userRoles: UserInterfaceWithRolesFromDB = {
             username: username,
             roles: roles
         };
-
+        //console.log(userRoles);
         return userRoles;
-        //userRowsWithRoles.map(row => {roles.push(row.RoleName)});
     },
     getAllUsers: async () => {
-        let users = await getDataFromDB(`SELECT email, username FROM User`);
+        let users = await getDataFromDB(`SELECT email, username FROM User`, undefined);
         //console.log(users);
         return users;
     },
@@ -39,19 +37,19 @@ const usersServices = {
             username: user.username
         };
 
-        let newUserExists = await getDataFromDB(`SELECT email, username FROM User WHERE username = '${newUser.username}'`);
+        let newUserExists = await getDataFromDB(`SELECT email, username FROM User WHERE username = ?`, [newUser.username]);
         
         if (newUserExists) {
             return false;
         } else {
             // enne krüptime parooli ja siis saltime ka veel
-            insertDataToDB("INSERT INTO Users value (?, ?, ?)", [user.email, user.password, user.username]);
+            insertDataToDB("INSERT INTO Users VALUE (?, ?, ?)", [user.email, user.password, user.username]);
 
             return true;
         }
     },
     deleteUser: (username: string) => {
-        deleteDataFromDB(`DELETE FROM Users WHERE username = '${username}'`)
+        deleteDataFromDB(`DELETE FROM Users WHERE username = ?`, [username])
     },
     // https://www.section.io/engineering-education/password-strength-checker-javascript/
     checkPWCompatibility(password: string):boolean {

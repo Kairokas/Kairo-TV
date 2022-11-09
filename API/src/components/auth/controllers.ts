@@ -4,6 +4,15 @@ import { loginServices } from "./services";
 export const authController = {
     login: async (req: Request, res: Response) => {
         const { username, password } = req.body;
+        
+        if(!username || !password) {
+            return res.status(401).json({
+                success: false,
+                message: 'Login failed',
+                error: 'Username or password missing'
+            });
+        }
+
         const token = await loginServices.login(username, password);
 
         if(!token) {

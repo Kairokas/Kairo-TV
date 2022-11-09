@@ -3,12 +3,12 @@ import { getDataFromDB, insertDataToDB, deleteDataFromDB } from "../../functions
 
 const moviesServices = {
     findAllMovies: async () => {
-        let movies = await getDataFromDB(`SELECT * FROM Movie`);        
-
+        let movies = await getDataFromDB(`SELECT * FROM Movie`, undefined);        
+        
         return movies;
     },
     findMoviesByKeyword: async (keyword: string) => {
-        let matchingMovies = await getDataFromDB(`SELECT * FROM Movie WHERE Title LIKE '%${keyword}%'`);
+        let matchingMovies = await getDataFromDB(`SELECT * FROM Movie WHERE Title LIKE ?`, [`%${keyword}%`]);
         
         return matchingMovies;
     },
@@ -20,7 +20,7 @@ const moviesServices = {
             price: movie.price
         }
 
-        let newMovieExists = await getDataFromDB(`SELECT * FROM Movie WHERE Title = '${movie.movieTitle}'`);
+        let newMovieExists = await getDataFromDB(`SELECT * FROM Movie WHERE Title = ?`, [movie.movieTitle]);
         
         if (newMovieExists) {
             return false;
@@ -31,12 +31,12 @@ const moviesServices = {
         }
     },
     findMovieById: async (id: number) => {
-        let movie:MovieInterface | undefined = await getDataFromDB(`SELECT * FROM Movie WHERE ID = ${id}`);
+        let movie:MovieInterface | undefined = await getDataFromDB(`SELECT * FROM Movie WHERE ID = ?`, [id]);
         
         return movie;
     },
     deleteMovie: async (id: number) => {
-        deleteDataFromDB(`DELETE FROM Movie WHERE ID = '${id}'`)
+        deleteDataFromDB(`DELETE FROM Movie WHERE ID = ?`, [id])
     }
 }
 

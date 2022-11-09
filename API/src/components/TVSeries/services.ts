@@ -3,12 +3,12 @@ import { getDataFromDB, insertDataToDB, deleteDataFromDB } from "../../functions
 
 const tvSeriesServices = {
     findAllTvSeries: async () => {
-        let tvSeries = await getDataFromDB(`SELECT * FROM TvSerie`);
+        let tvSeries = await getDataFromDB(`SELECT * FROM TvSerie`, undefined);
 
         return tvSeries;
     },
     findTvSeriesByKeyword: async (keyword: string) => {
-        let matchingTvSeries = await getDataFromDB(`SELECT * FROM TvSerie WHERE Title LIKE '%${keyword}%'`);
+        let matchingTvSeries = await getDataFromDB(`SELECT * FROM TvSerie WHERE Title LIKE ?`, [`%${keyword}%`]);
         
         return matchingTvSeries;
     },
@@ -22,7 +22,7 @@ const tvSeriesServices = {
             price: tvSeries.price
         }
 
-        let newTvSeriesExists = await getDataFromDB(`SELECT * FROM TvSerie WHERE Title = '${tvSeries.seriesTitle}'`);
+        let newTvSeriesExists = await getDataFromDB(`SELECT * FROM TvSerie WHERE Title = ?`, [tvSeries.seriesTitle]);
         
         if (newTvSeriesExists) {
             return false;
@@ -33,12 +33,12 @@ const tvSeriesServices = {
         }
     },
     findTvSeriesById: async (id: number) => {
-        let tvSeries = await getDataFromDB(`SELECT * FROM TvSeries WHERE ID = ${id}`);
+        let tvSeries = await getDataFromDB(`SELECT * FROM TvSeries WHERE ID = ?`, [id]);
         
         return tvSeries;
     },
     deleteTvSeries: async (id: number) => {
-        deleteDataFromDB(`DELETE FROM TvSeries WHERE ID = '${id}'`)
+        deleteDataFromDB(`DELETE FROM TvSeries WHERE ID = ?`, [id])
     }
 }
 

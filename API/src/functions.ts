@@ -11,12 +11,12 @@ const pool = mariadb.createPool({
     supportBigNumbers: true
 });
 
-export async function getDataFromDB(query: string) {
+export async function getDataFromDB(query: string, data:any | undefined) {
     let conn;
 
     try {
         conn = await pool.getConnection();
-        const rows = await conn.query(query);
+        const rows = await conn.query(query, data);
         // rows: [ {val: 1}, meta: ... ]
 
         //const res = await conn.query("INSERT INTO myTable value (?, ?)", [1, "mariadb"]);
@@ -27,7 +27,7 @@ export async function getDataFromDB(query: string) {
         } else {
             // ei vaja metadatat
             delete rows.meta;
-
+            //console.log(rows);
             return rows;
         }
     } catch (err) {
@@ -55,7 +55,7 @@ export async function insertDataToDB(query: string, data:any) {
     }
 }
 
-export async function deleteDataFromDB(query: string) {
+export async function deleteDataFromDB(query: string, data:any) {
     let conn;
 
     try {

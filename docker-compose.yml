@@ -49,12 +49,4 @@ services:
       # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
       WATCHPACK_POLLING: "true"
 
-  # front-end:
-  #   container_name: kairo-tv-front
-  #   build:
-  #     context: ./
-  #     dockerfile: front.Dockerfile
-  #   volumes:
-  #    - ./react-front:/usr/share/nginx/html
-  #   ports:
-  #     - 80:80
+# start.sql teha, kuhu genereeritakse mock data - uurida selle kohta

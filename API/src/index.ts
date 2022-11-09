@@ -17,7 +17,7 @@ const PORT = 3000;
 // sebida siia vb veel infi juurde, mida logida võiks
 const logger = (req: Request, res: Response, next: NextFunction) => {
     // kirjutame faili ka selle sisu
-    console.log(`${new Date().toLocaleString()} ${req.method} ${req.url}`);
+    console.log(`${new Date().toLocaleString()} ${req.method} ${req.url} ${JSON.stringify(req.headers)}`);
     next();
 };
 
@@ -26,7 +26,19 @@ app.use(logger);
  
 app.get('/api/v1/health', (req: Request, res: Response) => {
     res.status(200).json(
-        {message: 'Meiega on kõik OK!! Anna päringutel minna!'}
+        {
+            success: true,
+            message: 'Meiega on kõik OK!! Anna päringutel minna!'
+        }
+    );
+});
+
+app.get('/api/v1/token', globalMiddlewares.isLoggedIn, (req: Request, res: Response) => {
+    res.status(200).json(
+        {
+            success: true,
+            message: 'Token OK!'
+        }
     );
 });
 
@@ -37,9 +49,6 @@ kasutajate
 blokk
 */
 // päri kõik kasutajad
-app.get('/api/v1/users', globalMiddlewares.isLoggedIn, usersControllers.getAllUsers);
-
-// autentimine
 app.get('/api/v1/users', globalMiddlewares.isLoggedIn, usersControllers.getAllUsers);
 
 // Kasutaja pärimine kasutajanime alusel
@@ -88,3 +97,5 @@ app.listen(PORT, () => { console.log('Server is running'); });
 // TODO
 // patch päringud andmete muutmiseks
 // testida kõik route'd
+// interface/tüüpe rohkem kirjeldada igalpool.. ntks SQL kasutajate pärimisel [UserInterfaceWithRolesFromDB]
+// andmete sisestamine koos hashitud parooliga

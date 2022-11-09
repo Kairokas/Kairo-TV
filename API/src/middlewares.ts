@@ -47,7 +47,8 @@ const globalMiddlewares = {
 
         if (!token) {
             return res.status(401).json({
-            error: 'No token provided',
+                success: false,
+                error: 'No token provided',
             });
         }
 
@@ -64,8 +65,8 @@ const globalMiddlewares = {
 
             return next();
         } catch(err) {
-            console.log("saime errori:" + err);
             return res.status(401).json({
+                success: false,
                 error: 'Invalid token',
             });
         }
@@ -75,6 +76,7 @@ const globalMiddlewares = {
             return next();
         } else {
             return res.status(401).json({
+                success: false,
                 error: 'Unauthorized'
             });
         }
