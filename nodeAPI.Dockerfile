@@ -17,6 +17,14 @@ RUN npm i bcrypt
 RUN npm i --save-dev @types/bcrypt
 RUN npm i jsonwebtoken
 RUN npm i --save-dev @types/jsonwebtoken
+RUN npm i mocha
+RUN npm i --save-dev @types/mocha
+# kas ikka on chaid vaja?
+RUN npm i chai
+RUN npm i --save-dev @types/chai
+RUN npm install --save-dev supertest 
+RUN npm install --save-dev @types/supertest
+RUN npm i nyc
 
 # RUN apt-get update && apt-get install -y telnet
 

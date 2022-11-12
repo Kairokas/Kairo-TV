@@ -14,7 +14,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "nyc mocha -r ts-node/register 'tests/**/*.ts'",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

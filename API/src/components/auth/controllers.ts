@@ -28,4 +28,12 @@ export const authController = {
             token: token
         });
     },
+    tokenOK: async (req: Request, res: Response) => {
+        res.status(200).json(
+            {
+                success: true,
+                message: 'Token OK!'
+            }
+        );
+    }
 }

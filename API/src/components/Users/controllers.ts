@@ -29,6 +29,15 @@ const usersControllers = {
             });
         }
     },
+    getAllUsersWithRoles: async (req: Request, res: Response) => {
+        const users = await usersServices.getAllUsersWithRoles();
+        
+        res.status(200).json({
+            success: true,
+            message: 'List of users registered with roles.',
+            users: users
+        });
+    },
     createUser: async (req: Request, res: Response) => {
         const { email, password, username } = req.body;
 

@@ -1,6 +1,30 @@
 import React, { useContext } from "react";
 import ReactDOM from "react-dom/client";
 import Popup from 'reactjs-popup';
+import {Bar} from 'react-chartjs-2';
+
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+} from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
 
 export const header = ReactDOM.createRoot(document.getElementById("header-content"));
 export const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -29,7 +53,7 @@ export function Home(props) {
     let result;
   
     if (!token) {
-      console.log('Not Authorized');
+      //console.log('Not Authorized');
       return false;
     } else {
       await fetch(
@@ -127,7 +151,7 @@ export function UnAuthenticatedHome(props) {
 
   async function handleSubmit() {
     const authentication = await authenticate(username, password);
-    console.log("login vastus, mis siia ei jõua vahepeal?: " + JSON.stringify(authentication));
+    //console.log("login vastus, mis siia ei jõua vahepeal?: " + JSON.stringify(authentication));
     if (authentication.authenticated) {
       localStorage.setItem('JWTToken', authentication.token);
       window.location.reload(false);
@@ -139,7 +163,7 @@ export function UnAuthenticatedHome(props) {
   // <Popup trigger={<button> Trigger</button>} position="right center">
   //   <div>Popup content here !!</div>
   // </Popup>
-
+  //console.log(page);
   return (
     <div>
       <header id="controls">
@@ -148,13 +172,6 @@ export function UnAuthenticatedHome(props) {
           Home/Logo
         </a>
         <ul id="controls-right">
-          <li>
-            <a
-              id="stats-button"
-              className="menu-button fa fa-bar-chart"
-              //onClick={() => StatsController()}
-            ></a>
-          </li>
           <li>
             <Popup
               trigger={<a id="users-button" className="menu-button fa fa-user"></a>}
@@ -198,6 +215,7 @@ export function UnAuthenticatedHome(props) {
           </li>
         </ul>
       </header>
+      {/* <HomeContent /> */}
       {/* {showLogin?
       
         <div id="login-screen">
@@ -224,7 +242,7 @@ export function UnAuthenticatedHome(props) {
 class AuthenticatedHome extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {searchText: ''};
+    this.state = {searchText: '', page: ''};
   }
 
   handleChange (e) {
@@ -240,37 +258,38 @@ class AuthenticatedHome extends React.Component {
           Home/Logo
         </a>
         <ul id="controls-right">
-            <li>
-              <a
-                id="stats-button"
-                className="menu-button fa fa-bar-chart"
-                //onClick={() => StatsController()}
-              ></a>
-            </li>
-            <li>
-              <div className="menu-button" /*onClick={() => SettingsController()}*/>
-                <img
-                  id="settings-button"
-                  src="./icons/cog2_darker.png"
-                  alt="Settings" />
-              </div>
-            </li>
-            <li>
-              <i className="menu-button fa fa-sign-out" aria-hidden="true" onClick={()=>{
+          <li>
+            <a
+              id="stats-button"
+              className="menu-button fa fa-bar-chart"
+              onClick={() => this.setState({page: "Stats"})}
+            ></a>
+          </li>
+          <li>
+            <i 
+              className="menu-button fa fa-cog" 
+              aria-hidden="true" 
+              onClick={() => this.setState({page: "Settings"})}
+            >
+            </i>
+          </li>
+          <li>
+            <i className="menu-button fa fa-sign-out" aria-hidden="true" onClick={()=>{
                 localStorage.removeItem('JWTToken');
                 window.location.reload(false);
-              }}></i>
-            </li>
-            <li>
-              <input
-                onChange={(e) => {this.handleChange(e)}}
-                value={this.state.value}
-                id="search-input"
-                type="search"
-                placeholder="Mida otsime na?"
-              ></input>
-            </li>
-          </ul>
+              }}>
+            </i>
+          </li>
+          <li>
+            <input
+              onChange={(e) => {this.handleChange(e)}}
+              value={this.state.value}
+              id="search-input"
+              type="search"
+              placeholder="Mida otsime na?"
+            ></input>
+          </li>
+        </ul>
         {/* https://stackoverflow.com/questions/40764596/using-react-router-with-cdn-and-without-webpack-or-browserify */}
         {/* {props.onScreen === "Settings" ? (
           <ul id="controls-right">
@@ -304,102 +323,15 @@ class AuthenticatedHome extends React.Component {
         )} */}
         {/* </div> */}
       </header>
-      {/* {console.log(this.state.searchText)} */}
-      <HomeContent keyword={this.state.searchText} />
+      {/* {console.log(this.state.page)} */}
+      {this.state.page === ''?<HomeContent keyword={this.state.searchText} />:
+        this.state.page === 'Stats'?<Stats />:<Settings />
+      }
+      
     </div>
     )
   }
 }
-
-// export function ContentController(props) {
-//   const isAuthenticated = useContext(isAuthenticatedContext);
-//   console.log(isAuthenticated);
-//   console.log("asdasd");
-//   if (isAuthenticated) {
-//     // return (<AuthenticatedControls />);
-//     return '';
-//   } else {
-//     return (<UnAuthenticatedControls />);
-//   }
-// }
-
-// export function AuthenticatedHome(props) {
-//   const [searchText, updateSearchText] = React.useState();
-
-//   const handleChange = (event) => {
-//     updateSearchText(event.target.value);
-//   };
-
-//   return (
-//     <div>
-//       <header id="controls">
-//         {/* <div id="controls-parent"> */}
-//         <a className="home-button" href="./">
-//           Home/Logo
-//         </a>
-//         {/* https://stackoverflow.com/questions/40764596/using-react-router-with-cdn-and-without-webpack-or-browserify */}
-//         {props.onScreen === "Settings" ? (
-//           <ul id="controls-right">
-//             <li>
-//               <a id="series-button" className="menu-button fa fa-tv"></a>
-//             </li>
-//             <li>
-//               <a id="movies-button" className="menu-button fa fa-film"></a>
-//             </li>
-//             <li>
-//               <a id="users-button" className="menu-button fa fa-user"></a>
-//             </li>
-//             <li>
-//               <a
-//                 className="menu-button"
-//                 //onClick={() => root.render(<HomeContent />)}
-//               >
-//                 <svg
-//                   alt="Home"
-//                   xmlns="http://www.w3.org/2000/svg"
-//                   width="16"
-//                   height="16"
-//                   viewBox="0 0 16 16"
-//                 >
-//                   <path d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
-//                 </svg>
-//               </a>
-//             </li>
-//           </ul>
-//         ) : (
-//           <ul id="controls-right">
-//             <li>
-//               <a
-//                 id="stats-button"
-//                 className="menu-button fa fa-bar-chart"
-//                 //onClick={() => StatsController()}
-//               ></a>
-//             </li>
-//             <li>
-//               <div className="menu-button" /*onClick={() => SettingsController()}*/>
-//                 <img
-//                   id="settings-button"
-//                   src="./icons/cog2_darker.png"
-//                   alt="Settings" />
-//               </div>
-//             </li>
-//             <li>
-//               <input
-//                 onChange={handleChange}
-//                 value={searchText ? searchText : ""}
-//                 id="search-input"
-//                 type="search"
-//                 placeholder="Mida otsime na?"
-//               ></input>
-//             </li>
-//           </ul>
-//         )}
-//         {/* </div> */}
-//       </header>
-//       {searchText?<HomeContent keyword={searchText} />:<HomeContent />}
-//     </div>
-//   );
-// }
 
 async function authenticate(username, password) {
   // default väärtus juhul kui fetch ei tagasta midagi
@@ -435,13 +367,14 @@ async function authenticate(username, password) {
     result = data;
   });
 
-  console.log("fetch login vastus: " + JSON.stringify(result));
+  //console.log("fetch login vastus: " + JSON.stringify(result));
 
-  if (result.error === "Username or password missing") {
+  //if (result.error === "Username or password missing") {
+  if (result.success === false) {
     //changeIsAuthenticated(false);
 
     return {authenticated: false};
-  } else if (result.success) {
+  } else {
     //console.log(data);
     // changeUser(username);
     //changeToken(data.token);
@@ -451,25 +384,8 @@ async function authenticate(username, password) {
   }
 }
 
-// function LoginScreen() {
-//   return(
-  
-//   // return (
-//   //   <div id="login-screen">
-//   //     <label for="username"><b>Username</b></label>
-//   //     <input type="text" placeholder="Enter Username" name="username" required/>
-
-//   //     <label for="password"><b>Password</b></label>
-//   //     <input type="password" placeholder="Enter Password" name="password" required/>
-
-//   //     <button type="submit">Login</button>
-//   //   </div>
-//   // );
-// }
-
 export function HomeContent(props) {
   const keyword = props.keyword;
-
   const [movies, changeMovies] = React.useState([]);
   const token = localStorage.getItem("JWTToken");
 
@@ -484,7 +400,7 @@ export function HomeContent(props) {
         return res;
       })
       .then((data) => {
-        if (data.error === "Invalid token") {
+        if (!data.success) {
           changeMovies([]);
         } else {
           changeMovies(data.movies);
@@ -503,9 +419,7 @@ export function HomeContent(props) {
         return res;
       })
       .then((data) => {
-        if (data.message === "No movie titles match your searched keyword.") {
-          changeMovies([]);
-        } else if ((data.error === "Invalid token")) {
+        if (!data.success) {
           changeMovies([]);
         } else {
           changeMovies(data.movies);
@@ -527,7 +441,7 @@ export function HomeContent(props) {
       }
     // }
   }, [keyword]);
-  // console.log(movies);
+  
   // console.log(token);
   let renderedOutput = movies.map((item) => (
     <div className="content-container" key={item.Title}>
@@ -542,80 +456,132 @@ export function HomeContent(props) {
   );
 }
 
-// export function HomeContent(props) {
-//   const token = useContext(JWTToken);
-//   console.log(token);
-//   // const Redirect = window.ReactRouterDOM.Redirect;
-//   const [movies, changeMovies] = React.useState([]);
+export function Stats(props) {
+  const [movies, changeMovies] = React.useState([]);
+  const token = localStorage.getItem("JWTToken");
+  let movieYearsCount = {};
 
-//   function getAllMovies() {
-//     fetch("http://localhost:3000/api/v1/movies", {
-//       headers: {
-//       'Authorization': token,
-//     }})
-//       .then((response) => {
-//         let res = response.json();
-//         //console.log(res);
-//         return res;
-//       })
-//       .then((data) => {
-//         console.log(data.message);
-//         changeMovies(data.movies);
-//       });
-//   }
+  function getAllMovies() {
+    fetch("http://localhost:3000/api/v1/movies", {
+      headers: {
+      'Authorization': token,
+    }})
+      .then((response) => {
+        let res = response.json();
+        //console.log(res);
+        return res;
+      })
+      .then((data) => {
+        if (!data.success) {
+          changeMovies([]);
+        } else {
+          changeMovies(data.movies);
+        }        
+      });
+  }
 
-//   function getContentByTitle(keyword) {
-//     fetch(`http://localhost:3000/api/v1/movies/${keyword}`, {
-//       headers: {
-//       'Authorization': token,
-//     }})
-//       .then((response) => {
-//         let res = response.json();
-//         //console.log(res);
-//         return res;
-//       })
-//       .then((data) => {
-//         console.log(data);
-//         if (data.message === "No movie titles match your searched keyword.") {
-//           changeMovies([]);
-//         } else {
-//           changeMovies(data.movies);
-//         }
-//       });
-//   }
+  React.useEffect(() => {
+    getAllMovies();
+  }, []);
+  //console.log(movies);
 
-//   if (!props.keyword) {
-//     //console.log("parsime kõiki");
-//     //getAllMovies();
-//     // teine muutuja defineerib jälgitavad objektid, peale mida tõmmatakse func käima
-//     React.useEffect(() => {
-//       getAllMovies();
-//     }, [props]);
-//   } else if (props.keyword) {
-//     //console.log("parsime otsitut");
-//     //getContentByTitle(props.keyword)
-//     // teine muutuja defineerib jälgitavad objektid, peale mida tõmmatakse func käima
-//     React.useEffect(() => {
-//       getContentByTitle(props.keyword);
-//     }, [props]);
-//   }
+  movies.map((item) => {
+    if (movieYearsCount[item.ReleaseYear] === undefined) {
+      movieYearsCount[item.ReleaseYear] = 1;
+    } else {
+      movieYearsCount[item.ReleaseYear] += 1;
+    }
+  });
 
-//   React.useEffect(() => {
-//     getAllMovies();
-//   },[]);
+  return (
+    <div>
+      <Bar data={{
+        datasets: [
+          {
+            label: "filmid",
+            data: Object.values(movieYearsCount),
+            backgroundColor: "rgba(192, 192, 192, 0.8)",
+          },
+        ],
+        labels:Object.keys(movieYearsCount) 
+      }}  />
+    </div>
+  );
+}
 
-//   let renderedOutput = movies.map((item) => (
-//     <div className="content-container" key={item.Title}>
-//       {item.Title}
-//     </div>
-//   ));
+export function Settings(props) {
+  const keyword = props.keyword;
+  const [users, changeUsers] = React.useState([]);
+  const token = localStorage.getItem("JWTToken");
 
-//   return (
-//     <section>
-//       <div id="content-parent">{renderedOutput}</div>
-//     </section>
-//   );
-// }
+  function getAllUsersRoles() {
+    //fetch("http://localhost:3000/api/v1/usersroles", {
+    fetch("http://localhost:3000/api/v1/users", {
+      headers: {
+      'Authorization': token,
+    }})
+      .then((response) => {
+        let res = response.json();
+        //console.log(res);
+        return res;
+      })
+      .then((data) => {
+        if (!data.success) {
+          changeUsers([]);
+        } else {
+          changeUsers(data.users);
+        }        
+      });
+  }
+
+  function getUsernames() {
+    fetch(`http://localhost:3000/api/v1/users/${keyword}`, {
+      headers: {
+      'Authorization': token,
+    }})
+      .then((response) => {
+        let res = response.json();
+        //console.log(res);
+        return res;
+      })
+      .then((data) => {
+        if (!data.success) {
+          changeUsers([]);
+        } else {
+          changeUsers(data.users);
+        }
+      });
+  }
+  
+  React.useEffect(() => {
+    //console.log(token);
+    //console.log(keyword);
+    // if (token) {
+      //console.log(keyword);
+      if (keyword === '' || !keyword) {
+        //console.log("pärime kõik");
+        getAllUsersRoles();
+      } 
+      // else {
+      //   //console.log("pärime keywordiga");
+      //   getUsernames();
+      // }
+    // }
+  }, [keyword]);
+  
+  console.log(users);
+  let renderedOutput = users.map((item) => (
+    <div className="content-container" key={item.username}>
+      {item.username}
+    </div>
+  ));
+
+  return (
+    <section>
+      <div id="content-parent">{renderedOutput}</div>
+    </section>
+  );
+}
 
 // function SettingsController() {
 //   header.render(

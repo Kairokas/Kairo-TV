@@ -3,30 +3,38 @@ Rollidele Enumid lisada?
 create table User (
 	ID BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Email varchar(80) NOT NULL,
-    Username varchar(50) not null UNIQUE,
+    Username varchar(50) not null,
     Password varchar(80) not null
 );
 
 create table Role (
 	ID BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    RoleName varchar(50) not null UNIQUE
+    RoleName varchar(50) not null
 );
 
-create table UserRoles (
-	primary key(UserID, RoleID),
-    UserID BIGINT not null,
-    Username varchar(50) not null,
-    RoleID BIGINT not null,
-    RoleName varchar(50) not null default 'user',
-	CONSTRAINT `fk_User_Role_UserID` foreign key (UserID) references User (ID) ON DELETE CASCADE,
-    CONSTRAINT `fk_User_Role_RoleID` foreign key (RoleID) references Role (ID) ON DELETE CASCADE
-)ENGINE = InnoDB;
+CREATE TABLE UserRoles (
+  UserID BIGINT NOT NULL,
+  RoleID BIGINT NOT NULL,
+  Username VARCHAR(50) NOT NULL,
+  RoleName VARCHAR(50) NOT NULL,
+  PRIMARY KEY(UserID, RoleID),
+  CONSTRAINT `UserID`
+    FOREIGN KEY (UserID)
+    REFERENCES User (ID)
+    ON DELETE CASCADE
+    ON UPDATE RESTRICT,
+  CONSTRAINT `RoleID`
+    FOREIGN KEY (RoleID)
+    REFERENCES Role (ID)
+    ON DELETE CASCADE
+    ON UPDATE RESTRICT
+);
 
 create table Movie (
 	ID BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Title varchar(100) not null,
     ReleaseYear int,
-    LocationURI varchar(200) UNIQUE,
+    LocationURI varchar(200),
     Price int not null
 );
 
@@ -36,10 +44,12 @@ create table TvSerie (
     ReleaseYear int,
     Episodes int,
     Seasons int,
-    LocationURI varchar(200) UNIQUE,
+    LocationURI varchar(200),
     Price int not null
 );
 
+insert into UserRoles (UserID, Username, RoleID, Rolename) values (2, 'anehls0', 2, 'user');
+insert into UserRoles (UserID, Username, RoleID, Rolename) values (2, 'anehls0', 1, 'admin');
 
 insert into User (Username, Password, Email) values ('anehls0', 'VSjkzibw', 'lrawsen0@goo.gl');
 insert into User (Username, Password, Email) values ('samery1', 'FWHqEjal', 'rgearty1@house.gov');

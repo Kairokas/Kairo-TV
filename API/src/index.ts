@@ -33,14 +33,7 @@ app.get('/api/v1/health', (req: Request, res: Response) => {
     );
 });
 
-app.get('/api/v1/token', globalMiddlewares.isLoggedIn, (req: Request, res: Response) => {
-    res.status(200).json(
-        {
-            success: true,
-            message: 'Token OK!'
-        }
-    );
-});
+app.get('/api/v1/token', globalMiddlewares.isLoggedIn, authController.tokenOK);
 
 app.post('/api/v1/login', authController.login);
 
@@ -50,6 +43,8 @@ blokk
 */
 // päri kõik kasutajad
 app.get('/api/v1/users', globalMiddlewares.isLoggedIn, usersControllers.getAllUsers);
+
+app.get('/api/v1/usersroles', globalMiddlewares.isLoggedIn, usersControllers.getAllUsersWithRoles);
 
 // Kasutaja pärimine kasutajanime alusel
 app.get('/api/v1/users/:username',  globalMiddlewares.isLoggedIn, usersControllers.getUserByUsername);

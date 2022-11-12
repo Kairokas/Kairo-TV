@@ -25,6 +25,35 @@ const usersServices = {
         //console.log(userRoles);
         return userRoles;
     },
+    getAllUsersWithRoles: async () => {
+        //let usersRoles:{username: string | undefined, roles: string[] | undefined};
+        let usersRoles:any[];
+        let usersRolesRows:string[] = await getDataFromDB(`SELECT Username, Rolename FROM UserRoles`, undefined);
+
+        // for (let key in usersRolesRows) {
+        //     let value = usersRolesRows[key];
+        //     console.log(JSON.stringify(key) + " : " + JSON.stringify(value))
+        // }
+        usersRolesRows.map((item:any) => {
+            if (!usersRoles.includes(item.username)) {
+                usersRoles.push({username: item.Username, roles: [item.Rolename]})
+                // usersRoles[item.Username] = [item.Rolename];
+            } else {
+                usersRoles.forEach((user)=>{
+                    if (user.username === item.Username) {
+                        user.roles.push(item.Rolename);
+                    }
+                });
+                //usersRoles[item.Username].push(item.Rolename);
+            }
+
+            console.log(usersRoles);
+        });
+
+        console.log(usersRolesRows);
+        // console.log(usersRoles);
+        // return usersRoles;
+    },
     getAllUsers: async () => {
         let users = await getDataFromDB(`SELECT email, username FROM User`, undefined);
         //console.log(users);
