@@ -1,12 +1,20 @@
-interface UserInterface {
-    email: string;
+export interface UsernameInterface {
     username: string;
+};
+
+interface UserInterface extends UsernameInterface {
+    email: string;
     password: string;
 };
 
 interface UserInterfaceFromDB extends UserInterface {
     id: number;
 };
+
+export interface UsernameInterfaceFromDB {
+    id: number;
+    username: string;
+}
 
 interface UserInterfaceWithRolesFromDB {
     username: string;

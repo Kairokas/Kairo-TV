@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { UserInterface } from "./interfaces";
+import { UserInterface, UsernameInterfaceFromDB } from "./interfaces";
 import usersServices from "./services";
 
 const usersControllers = {
@@ -14,7 +14,7 @@ const usersControllers = {
     },
     getUserByUsername: async (req: Request, res: Response) => {
         const username = req.params.username;
-        let user = await usersServices.findUserByUsername(username);
+        const user: undefined | UsernameInterfaceFromDB = await usersServices.findUserByUsername(username);
         
         if (!user) {
             return res.status(404).json({
@@ -83,6 +83,22 @@ const usersControllers = {
             return res.status(201).json({
                 success: true,
                 message: `User ${username} deleted.`
+            });
+        }
+    },
+    userExists: async (req: Request, res: Response) => {
+        const username = req.params.username;
+        const userExists: boolean = await usersServices.doesUserExist(username);
+        
+        if (!userExists) {
+            return res.status(200).json({
+                success: false,
+                message: `User not found`
+            });
+        } else {
+            return res.status(200).json({
+                success: true,
+                message: `User does exist.`
             });
         }
     }

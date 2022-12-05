@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Application, Request, Response, NextFunction } from 'express';
 const functions = require("./functions");
 import globalMiddlewares from './middlewares';
 import moviesControllers from './components/Movies/controllers';
@@ -7,13 +7,6 @@ import tvSeriesControllers from './components/TVSeries/controllers';
 import { authController } from './components/auth/controllers';
 const cors = require('cors')
 
-const app = express();
-
-app.use(express.json());
-app.use(cors({origin: '*'}));
-
-const PORT = 3000;
-
 // sebida siia vb veel infi juurde, mida logida võiks
 const logger = (req: Request, res: Response, next: NextFunction) => {
     // kirjutame faili ka selle sisu
@@ -21,6 +14,12 @@ const logger = (req: Request, res: Response, next: NextFunction) => {
     next();
 };
 
+const PORT = 3000;
+
+export const app:Application = express();
+
+app.use(express.json());
+app.use(cors({origin: 'http://localhost'}));
 // mingi middleware välja mõtlemine ehk konkreetse routi jaoks?
 app.use(logger);
  
@@ -45,6 +44,8 @@ blokk
 app.get('/api/v1/users', globalMiddlewares.isLoggedIn, usersControllers.getAllUsers);
 
 app.get('/api/v1/usersroles', globalMiddlewares.isLoggedIn, usersControllers.getAllUsersWithRoles);
+
+app.get('/api/v1/userexists/:username', usersControllers.userExists);
 
 // Kasutaja pärimine kasutajanime alusel
 app.get('/api/v1/users/:username',  globalMiddlewares.isLoggedIn, usersControllers.getUserByUsername);
@@ -93,4 +94,6 @@ app.listen(PORT, () => { console.log('Server is running'); });
 // patch päringud andmete muutmiseks
 // testida kõik route'd
 // interface/tüüpe rohkem kirjeldada igalpool.. ntks SQL kasutajate pärimisel [UserInterfaceWithRolesFromDB]
-// andmete sisestamine koos hashitud parooliga
+// rollid teatud routidele
+// kuidas front-endile asju pärida API'st
+// regex parameetritele?

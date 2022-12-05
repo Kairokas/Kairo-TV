@@ -19,7 +19,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "nodemon -L"
+    "start": "nodemon -L",
+    "test": "nyc mocha --exit -r ts-node/register 'tests/**/*.ts'"
   },
   "description": ""
 }

@@ -45,6 +45,68 @@ export const root = ReactDOM.createRoot(document.getElementById("root"));
 //   };
 // }
 
+async function userExists(username) {
+  let result;
+  
+  await fetch(
+    `http://localhost:3000/api/v1/userexists/${username}`, {
+      method: 'GET',
+    }
+  ).then((response) => {
+      let res = response.json();
+      //console.log(res);
+      return res;
+    }
+  ).then((data) => {
+      //console.log(data);
+      result = data;
+    }
+  );
+
+  if (result.success) {
+    console.log("Kasutaja on juba olemas!" + JSON.stringify(result));
+    return true;
+  } else {
+    console.log("Kasutajat ei eksisteeri" + JSON.stringify(result));
+
+    return false;
+  }
+}
+
+async function addUser(email, username, password) {
+  let result;
+  const data = {
+    email: email,
+    username: username,
+    password: password
+  }
+
+  await fetch(
+    `http://localhost:3000/api/v1/users`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then((response) => {
+      let res = response.json();
+      //console.log(res);
+      return res;
+    })
+    .then((data) => {
+      result = data;
+    });
+
+  if (result.success) {
+    console.log("Kasutaja lisatud" + JSON.stringify(result));
+    return true;
+  } else {
+    console.log("Kasutaja EI lisatud" + JSON.stringify(result));
+    return result.message;
+  }
+}
+
 export function Home(props) {
   const [isTokenOK, changeIsTokenOK] = React.useState(false);
 
@@ -59,7 +121,7 @@ export function Home(props) {
       await fetch(
         "http://localhost:3000/api/v1/token", {
           method: 'GET', 
-            headers: {
+          headers: {
             'Authorization': token,
           }
         })
@@ -125,6 +187,18 @@ export function Home(props) {
 //   }
 // }
 
+async function login(username, password) {
+  const authentication = await authenticate(username, password);
+  //console.log("login vastus, mis siia ei jõua vahepeal?: " + JSON.stringify(authentication));
+  if (authentication.authenticated) {
+    localStorage.setItem('JWTToken', authentication.token);
+
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export function UnAuthenticatedHome(props) {
   const [errorMessage, changeErrorMessage] = React.useState('');
   const [username, changeUsername] = React.useState('');
@@ -149,14 +223,11 @@ export function UnAuthenticatedHome(props) {
   //anehls0
   //VSjkzibw
 
-  async function handleSubmit() {
-    const authentication = await authenticate(username, password);
-    //console.log("login vastus, mis siia ei jõua vahepeal?: " + JSON.stringify(authentication));
-    if (authentication.authenticated) {
-      localStorage.setItem('JWTToken', authentication.token);
-      window.location.reload(false);
-    } else {
+  function handleSubmit() {
+    if (!login(username, password)) {
       changeErrorMessage('Viga kasutajanimes või paroolis');
+    } else {
+      window.location.reload(false);
     }
   }
 
@@ -215,7 +286,7 @@ export function UnAuthenticatedHome(props) {
           </li>
         </ul>
       </header>
-      {/* <HomeContent /> */}
+      <UnAuthenticatedHomeContent />
       {/* {showLogin?
       
         <div id="login-screen">
@@ -233,6 +304,92 @@ export function UnAuthenticatedHome(props) {
       :''} */}
     </div>
   );
+}
+
+class UnAuthenticatedHomeContent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {email: '', username: '', password: '', error: ''};
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(e) {
+    if (e.target.name === 'password') {
+      this.setState({password: e.target.value});
+    } else if (e.target.name === 'username') {
+      this.setState({username: e.target.value});
+    } else if (e.target.name === 'email') {
+      this.setState({email: e.target.value});
+    }
+  }
+
+  async handleSubmit(e) {
+    e.preventDefault();
+    const pwregex = new RegExp('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|\]).{8,32}$');
+    
+    if (await userExists(this.state.username)) {
+      this.setState({error: "Selline kasutajanimi on juba olemas!"});
+
+      // if (authenticate(this.state.username, this.state.password)) {
+
+      // } else {
+      //   this.setState({error: ""});
+      // }
+    } else {
+      const addUserTrueOrMessage = addUser(this.state.email, this.state.username, this.state.password);
+      if (addUserTrueOrMessage) {
+        [3,2,1].forEach(element => {
+          setTimeout(function () {
+            this.setState({error: `Registreerimine õnnestus, Teid suunatakse ${element}... sekundi pärast edasi`});
+          }, 1000);
+        });
+
+        //login(this.state.username, this.state.password);
+
+        //window.location.reload(false);
+      } else {
+        this.setState({error: addUserTrueOrMessage});
+      }
+    }
+
+    // if (pwregex.test(this.state.password)) {
+
+    // } else {
+    //   this.setState({error: "Parool ei vasta nõuetele!"});
+    // }
+
+    
+  }
+
+  render () {
+    return (
+      <div>
+        {
+          [3,2,1].forEach(element => {
+            setTimeout(function () {
+              `Registreerimine õnnestus, Teid suunatakse ${element}... sekundi pärast edasi`;
+            }, 1000);
+          })
+        }
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            Email address:
+            <input onChange={this.handleChange} value={this.state.email} type="text" name="email" placeholder="Email address"></input>      
+            Username:
+            <input onChange={this.handleChange} value={this.state.username} type="text" name="username" placeholder="Kasutajanimi"></input>      
+            Password:
+            <input data-toggle="tooltip" data-placement="top" title="8 tähemärki, 1 suur täht, 1 sümbol" onChange={this.handleChange} value={this.state.password} type="password" name="password" placeholder="Parool">
+              
+            </input>
+          </label>
+          <input type="submit" value="Rega!" />
+        </form>
+        {this.state.error!=''?this.state.error:''}
+      </div>
+    );
+  }
 }
 
 // export function AuthenticatedHome(props) {
@@ -335,7 +492,7 @@ class AuthenticatedHome extends React.Component {
 
 async function authenticate(username, password) {
   // default väärtus juhul kui fetch ei tagasta midagi
-  let result = {authenticated: false};
+  let result;
 
   let data = {
     username: username,
@@ -515,8 +672,8 @@ export function Settings(props) {
   const token = localStorage.getItem("JWTToken");
 
   function getAllUsersRoles() {
-    //fetch("http://localhost:3000/api/v1/usersroles", {
-    fetch("http://localhost:3000/api/v1/users", {
+    fetch("http://localhost:3000/api/v1/usersroles", {
+    //fetch("http://localhost:3000/api/v1/users", {
       headers: {
       'Authorization': token,
     }})
@@ -531,25 +688,6 @@ export function Settings(props) {
         } else {
           changeUsers(data.users);
         }        
-      });
-  }
-
-  function getUsernames() {
-    fetch(`http://localhost:3000/api/v1/users/${keyword}`, {
-      headers: {
-      'Authorization': token,
-    }})
-      .then((response) => {
-        let res = response.json();
-        //console.log(res);
-        return res;
-      })
-      .then((data) => {
-        if (!data.success) {
-          changeUsers([]);
-        } else {
-          changeUsers(data.users);
-        }
       });
   }
   
@@ -600,3 +738,8 @@ export function Settings(props) {
 //     <div></div>
 //   );
 // }
+
+// TODO
+// iga x aja tagant vaadatakse tagataustal kas token kehtib - kui mitte, siis logitakse välja
+// regamisel olemasolev kasutaja asemel soovitatakse ka teisi nimesid, mis saadaval
+// username võiks ära eemaldada ja jätta aind emaili

@@ -1,6 +1,18 @@
 FROM node:slim as base
 
 WORKDIR /nodeAPI
+
+COPY API .
+
+# COPY API/package.json package.json
+# COPY API/package-lock.json package-lock.json
+# COPY API/tests tests
+
+# FROM base as test
+# RUN npm ci
+
+# FROM base as prod
+# RUN npm ci --production
 # COPY API /nodeAPI
 
 RUN npm init -y
@@ -22,10 +34,13 @@ RUN npm i --save-dev @types/mocha
 # kas ikka on chaid vaja?
 RUN npm i chai
 RUN npm i --save-dev @types/chai
-RUN npm install --save-dev supertest 
-RUN npm install --save-dev @types/supertest
+RUN npm i --save-dev supertest 
+RUN npm i --save-dev @types/supertest
 RUN npm i nyc
 
-# RUN apt-get update && apt-get install -y telnet
+# hack, et allolevad käsud joostaks cachimata
+ADD "https://8.8.8.8" skipcache
+
+RUN npm test
 
 CMD ["npm", "start"]

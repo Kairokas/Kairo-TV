@@ -40,11 +40,19 @@ const globalMiddlewares = {
             }
         }
     },
+    // kui front end teeb siia vastu päringu, siis lastakse ta kohe läbi - tulevikus vb teha eraldi middlware frondi jaoks
     isLoggedIn: async function (req: Request, res: Response, next: NextFunction) {
         let jwt_password;
         const token = req.headers.authorization;
+        
         //const token = authHeader?.split(' ')[1];
 
+        // if (token == process.env.REACT_APP_PASS) {
+        //     console.log(process.env.REACT_APP_PASS);
+        //     console.log(token);
+        //     return next();
+        // }
+        //console.log(token);
         if (!token) {
             return res.status(401).json({
                 success: false,

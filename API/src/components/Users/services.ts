@@ -27,31 +27,47 @@ const usersServices = {
     },
     getAllUsersWithRoles: async () => {
         //let usersRoles:{username: string | undefined, roles: string[] | undefined};
-        let usersRoles:any[];
+        let usersRoles:any[] = [];
         let usersRolesRows:string[] = await getDataFromDB(`SELECT Username, Rolename FROM UserRoles`, undefined);
 
         // for (let key in usersRolesRows) {
         //     let value = usersRolesRows[key];
         //     console.log(JSON.stringify(key) + " : " + JSON.stringify(value))
         // }
-        usersRolesRows.map((item:any) => {
-            if (!usersRoles.includes(item.username)) {
-                usersRoles.push({username: item.Username, roles: [item.Rolename]})
-                // usersRoles[item.Username] = [item.Rolename];
-            } else {
-                usersRoles.forEach((user)=>{
-                    if (user.username === item.Username) {
-                        user.roles.push(item.Rolename);
-                    }
-                });
-                //usersRoles[item.Username].push(item.Rolename);
-            }
 
-            console.log(usersRoles);
+        // const usersRoles: UserInterfaceWithRolesFromDB = {
+        //     username: username,
+        //     roles: roles
+        // };
+
+        usersRolesRows.map((item:any) => {
+            if (usersRoles.length == 0) {
+                usersRoles.push({username: item.Username, roles: [item.Rolename]})
+            }
+            
+            usersRoles.forEach((user)=>{
+                if (user.username != item.Username) {
+                    usersRoles.push({username: item.Username, roles: [item.Rolename]})
+                } else {
+                    user.roles.push(item.Rolename);
+                }
+            });
+
+            // if (!usersRoles.includes(item.username)) {
+            //     usersRoles.push({username: item.Username, roles: [item.Rolename]})
+            //     // usersRoles[item.Username] = [item.Rolename];
+            // } else {
+            //     usersRoles.forEach((user)=>{
+            //         if (user.username === item.Username) {
+            //             user.roles.push(item.Rolename);
+            //         }
+            //     });
+            //     //usersRoles[item.Username].push(item.Rolename);
+            // }
         });
 
-        console.log(usersRolesRows);
-        // console.log(usersRoles);
+        //console.log(usersRolesRows);
+        console.log(usersRoles);
         // return usersRoles;
     },
     getAllUsers: async () => {
@@ -72,19 +88,28 @@ const usersServices = {
             return false;
         } else {
             // enne krüptime parooli ja siis saltime ka veel
-            insertDataToDB("INSERT INTO Users VALUE (?, ?, ?)", [user.email, user.password, user.username]);
+            insertDataToDB("INSERT INTO User VALUE (?, ?, ?)", [user.email, user.password, user.username]);
 
             return true;
         }
     },
     deleteUser: (username: string) => {
-        deleteDataFromDB(`DELETE FROM Users WHERE username = ?`, [username])
+        deleteDataFromDB(`DELETE FROM User WHERE username = ?`, [username])
     },
     // https://www.section.io/engineering-education/password-strength-checker-javascript/
     checkPWCompatibility(password: string):boolean {
         let regexRequirements = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})')
         
         if (regexRequirements.test(password)) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    doesUserExist: async (username: string) => {
+        let userExists = await getDataFromDB(`SELECT username FROM User WHERE username = ?`, [username]);
+        
+        if (userExists) {
             return true;
         } else {
             return false;

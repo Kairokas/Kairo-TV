@@ -61,11 +61,11 @@ body {
   /* width: max-content; */
 }
 
-#settings-button {
+/* #settings-button {
   width: 25px;
   height: 25px;
   cursor: pointer;
-}
+} */
 
 #search-input {
   height: 40%;

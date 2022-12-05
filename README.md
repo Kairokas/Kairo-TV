@@ -15,6 +15,7 @@ Antud lahenduses on kasutusel 3 erinevat teenust, mis jooksevad erikonteinerites
 
 ## muid kasulikke käske
 *docker compose run service_name bash - service_name tuleneb defineeritud docker-compose.yml failist, käsk *käivitab ette antud konteineri bashi  
+*docker-compose build --progress plain - testide jooksutamiseks kasutada seda (kuvab outputi käskudel)  
 
 ## API oskab töödelda:
 ### Enne igasugust tööd on vajalik ennast autentida. Andmete muutmisel ja lisamisel on vajalik administraatori õigused.
@@ -24,6 +25,7 @@ Antud lahenduses on kasutusel 3 erinevat teenust, mis jooksevad erikonteinerites
 ### tagastame kõik vasted andmebaasist:
 *GET localhost:3000/api/v1/health  
 *GET localhost:3000/api/v1/users  
+*GET localhost:3000/api/v1/userexists/{username}  
 *GET localhost:3000/api/v1/movies  
 *GET localhost:3000/api/v1/tvseries  
 *GET localhost:3000/api/v1/usersroles  
@@ -49,4 +51,5 @@ Kuidas saaks HTML'i elemente "pikendada" reactiga?
 
 ### TODO
 Body äärtest tumedam, keskelt hele gradient  
-Testandmebaasiga teste jooksutada (loo, testi, kustuta)  
+Testandmebaasiga teste jooksutada (loo, testi, kustuta) 
+ 

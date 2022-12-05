@@ -1,4 +1,5 @@
 import usersServices from '../Users/services';
+import { UserInterfaceFromDB, UsernameInterfaceFromDB } from "../Users/interfaces";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 require('dotenv').config();
@@ -7,7 +8,7 @@ export const loginServices = {
     login: async (username: string, password: string) => {
         let saltRounds: number;
         let jwt_password: string;
-        const user = await usersServices.findUserByUsername(username);
+        const user:UserInterfaceFromDB | undefined = await usersServices.findUserByUsername(username);
 
         // Alumise puudumisel
         if (process.env.SALT_ROUNDS) {
@@ -27,9 +28,9 @@ export const loginServices = {
         
         // alloleva eemaldame kui saame hashitud paroolid andmebaasi poole
         // või kui saame front endis kasutajaid andmebaasi lisada/registreerida
-        let fake_pw = await bcrypt.hash('VSjkzibw', saltRounds);
+        //let fake_pw = await bcrypt.hash('VSjkzibw', saltRounds);
 
-        const match = await bcrypt.compare(password, fake_pw);
+        const match = await bcrypt.compare(password, user.password);
 
         // kui sisestati vale parool
         if (!match) return false;
