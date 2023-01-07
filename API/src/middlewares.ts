@@ -80,6 +80,8 @@ const globalMiddlewares = {
         }
     },
     isAdmin: async function (req: Request, res: Response, next: NextFunction) {
+        console.log(res.locals);
+
         if (res.locals.user.roles.includes("admin")) {
             return next();
         } else {

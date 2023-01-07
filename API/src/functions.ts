@@ -55,7 +55,7 @@ export async function insertDataToDB(query: string, data:any) {
     }
 }
 
-export async function deleteDataFromDB(query: string, data:any) {
+export async function deleteDataFromDB(query: string, data:any[]) {
     let conn;
 
     try {
@@ -63,7 +63,25 @@ export async function deleteDataFromDB(query: string, data:any) {
         //const rows = await conn.query(query);
         // rows: [ {val: 1}, meta: ... ]
 
-        const res = await conn.query(query);
+        const res = await conn.query(query, data);
+        // res: { affectedRows: 1, insertId: 1, warningStatus: 0 }
+        return res;
+    } catch (err) {
+        console.log(`DB error: ${err}`);
+    } finally {
+        if (conn) conn.release(); //release to pool
+    }
+}
+
+export async function updateDataInDB(query: string, data:any[]) {
+    let conn;
+
+    try {
+        conn = await pool.getConnection();
+        //const rows = await conn.query(query);
+        // rows: [ {val: 1}, meta: ... ]
+
+        const res = await conn.query(query, data);
         // res: { affectedRows: 1, insertId: 1, warningStatus: 0 }
         return res;
     } catch (err) {

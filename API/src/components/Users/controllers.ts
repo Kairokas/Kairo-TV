@@ -121,6 +121,29 @@ const usersControllers = {
                 message: `User does exist.`
             });
         }
+    },
+    updateUserRoles: async (req: Request, res: Response) => {
+        const { username, roles } = req.body;
+        const newUser:UserInterfaceWithRolesFromDB = {
+            username: username,
+            roles: roles
+        }
+
+        let user = await usersServices.findUserByUsername(username);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: `User not found`
+            });
+        } else {
+            usersServices.updateUserRoles(newUser);
+
+            return res.status(201).json({
+                success: true,
+                message: `User ${username} updated.`
+            });
+        }
     }
 };
 

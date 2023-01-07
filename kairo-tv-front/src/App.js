@@ -304,7 +304,6 @@ class UnAuthenticatedHomeContent extends React.Component {
 
     this.handleCountdown = this.handleCountdown.bind(this);
 
-
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -397,29 +396,27 @@ class AuthenticatedHome extends React.Component {
   constructor(props) {
     super(props);
     this.state = {searchText: '', page: '', roles: '', username: props.user};
-
-    this.getUserRoles = this.getUserRoles.bind(this);
   }
 
   handleChange (e) {
     this.setState({searchText: e.target.value});
   }
 
-  async getUserRoles() {
+  // componentDidMount() is invoked immediately after a component is mounted 
+  //(inserted into the tree). Initialization that requires DOM nodes should go here. 
+  //If you need to load data from a remote endpoint, this is a good place to instantiate the network request.
+  async componentDidMount() {
     const token = localStorage.getItem('JWTToken');
 
-    await fetch(`http://localhost:3000/api/v1/userexists/${this.state.username}`, {
+    await fetch(`http://localhost:3000/api/v1/userroles/${this.state.username}`, {
     //fetch("http://localhost:3000/api/v1/users", {
       headers: {
       'Authorization': token,
-    }})
-      .then((response) => {
+    }}).then((response) => {
         let res = response.json();
 
         return res;
-      })
-      .then((data) => {
-        console.log(data);
+      }).then((data) => {
         if (data.success) {
           this.setState({roles: data.roles});
         }
@@ -432,7 +429,6 @@ class AuthenticatedHome extends React.Component {
     return (
       <div>
       <header id="controls">
-        {console.log(JSON.stringify(this.state))}
         {/* <div id="controls-parent"> */}
         <a className="home-button" href="./">
           Home/Logo
@@ -453,13 +449,17 @@ class AuthenticatedHome extends React.Component {
             >
             </i>
           </li>
+          {this.state.roles.includes('admin')?
           <li>
             <i 
+              className="menu-button fa icon-dashboard" 
               aria-hidden="true" 
               onClick={() => this.setState({page: "AdminPanel"})}
             >
             </i>
           </li>
+          :
+          ''}
           <li>
             <i className="menu-button fa fa-sign-out" aria-hidden="true" onClick={()=>{
                 localStorage.removeItem('JWTToken');
@@ -512,7 +512,8 @@ class AuthenticatedHome extends React.Component {
       </header>
       {/* {console.log(this.state.page)} */}
       {this.state.page === ''?<HomeContent keyword={this.state.searchText} />:
-        this.state.page === 'Stats'?<Stats />:<AdminPanel />
+        this.state.page === 'Stats'?<Stats />:
+          this.state.page === 'Settings'?<Settings />:<AdminPanel loggedUsername={this.state.username} searchkeyword={this.state.searchText} />
       }
       
     </div>
@@ -691,7 +692,7 @@ export function Stats(props) {
 }
 
 export function AdminPanel(props) {
-  const keyword = props.keyword;
+  const keyword = props.searchkeyword;
   const [users, changeUsers] = React.useState([]);
   const token = localStorage.getItem("JWTToken");
 
@@ -714,23 +715,63 @@ export function AdminPanel(props) {
         }        
       });
   }
+
+  async function handleRoleChange(user, event) {
+    let newRoles;
+
+    if (event.target.name === 'promote') {
+      newRoles = ['user', 'admin'];
+    } else {
+      // if (user === props.loggedUsername) {
+      //   window.alert('Iseendalt ei saa admin õigusi eemaldada!')
+      //   return;
+      // }
+
+      newRoles = ['user'];
+    }
+    
+    fetch(`http://localhost:3000/api/v1/userroles/${user}`, {
+    //fetch("http://localhost:3000/api/v1/users", {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token,
+      },
+      body: JSON.stringify({username: user, roles: newRoles})
+    }).then((response) => {
+      let res = response.json();
+
+      return res;
+    }).then((data) => {
+      if (data.success) {
+        getAllUsersRoles();
+      }
+      //   changeUsers([]);
+      // } else {
+      //   changeUsers(data.users);
+      // }        
+    });
+  }
   
   React.useEffect(() => {
-    // if (token) {
-      if (keyword === '' || !keyword) {
-        //console.log("pärime kõik");
-        getAllUsersRoles();
-      } 
-      // else {
-      //   //console.log("pärime keywordiga");
-      //   getUsernames();
-      // }
-    // }
-  }, [keyword]);
+    getAllUsersRoles();
+  }, []);
   
   let renderedOutput = users.map((item) => (
     <div className="content-container" key={item.username}>
       {item.username}
+      {item.roles.includes('admin')?
+      <div>
+        <p>Administraator</p>
+        {item.username === props.loggedUsername?'':
+        <input type="button" value="Alanda tavaks" name='demote' onClick={(e) => handleRoleChange(item.username, e)}/>}
+      </div>
+      :
+      <div>
+        <p>Tavakasutaja</p>
+        <input type="button" value="Ülenda adminiks" name='promote' onClick={(e) => handleRoleChange(item.username, e)}/>
+      </div>
+        }
     </div>
   ));
 
@@ -739,6 +780,10 @@ export function AdminPanel(props) {
       <div id="content-parent">{renderedOutput}</div>
     </section>
   );
+}
+
+export function Settings(props) {
+
 }
 
 // function SettingsController() {

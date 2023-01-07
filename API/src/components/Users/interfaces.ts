@@ -4,11 +4,12 @@ export interface UsernameInterface {
 
 interface UserInterface extends UsernameInterface {
     email: string;
+    username: string;
     password: string;
 };
 
 interface UserInterfaceFromDB extends UserInterface {
-    id: number;
+    ID: number;
 };
 
 export interface UsernameInterfaceFromDB {

@@ -6,7 +6,7 @@ const usersServices = {
     findUserByUsername: async (username: string) => {
         // siin teeme joini users ja rollide vahel, et teada saada kasutaja õigused
         // let user:UserInterfaceFromDB | undefined = await getDataFromDB(`SELECT email, username, password FROM User WHERE username = ?`, [username]);
-        let user:any = await getDataFromDB(`SELECT email, username, password FROM User WHERE username = ?`, [username]);
+        let user:any = await getDataFromDB(`SELECT ID, email, username, password FROM User WHERE username = ?`, [username]);
 
         if (typeof user !== 'undefined') {
             user = user[0];
@@ -32,7 +32,7 @@ const usersServices = {
     },
     getAllUsersWithRoles: async () => {
         //let usersRoles:{username: string | undefined, roles: string[] | undefined};
-        let usersRoles:any[] = [];
+        let usersRoles:any = {};
         let usersRolesRows:string[] = await getDataFromDB(`SELECT Username, Rolename FROM UserRoles`, undefined);
 
         // for (let key in usersRolesRows) {
@@ -46,34 +46,14 @@ const usersServices = {
         // };
 
         usersRolesRows.map((item:any) => {
-            if (usersRoles.length == 0) {
-                usersRoles.push({username: item.Username, roles: [item.Rolename]})
+            if (usersRoles.hasOwnProperty(item.Username)) {
+                usersRoles[item.Username]['roles'].push(item.Rolename);
+            } else {
+                usersRoles[item.Username] = {username: item.Username, roles: [item.Rolename]}
             }
-            
-            usersRoles.forEach((user)=>{
-                if (user.username != item.Username) {
-                    usersRoles.push({username: item.Username, roles: [item.Rolename]})
-                } else {
-                    user.roles.push(item.Rolename);
-                }
-            });
-
-            // if (!usersRoles.includes(item.username)) {
-            //     usersRoles.push({username: item.Username, roles: [item.Rolename]})
-            //     // usersRoles[item.Username] = [item.Rolename];
-            // } else {
-            //     usersRoles.forEach((user)=>{
-            //         if (user.username === item.Username) {
-            //             user.roles.push(item.Rolename);
-            //         }
-            //     });
-            //     //usersRoles[item.Username].push(item.Rolename);
-            // }
         });
 
-        //console.log(usersRolesRows);
-        console.log(usersRoles);
-        // return usersRoles;
+        return Object.values(usersRoles);
     },
     getAllUsers: async () => {
         let users = await getDataFromDB(`SELECT email, username FROM User`, undefined);
@@ -130,6 +110,21 @@ const usersServices = {
         } else {
             return false;
         }
+    },
+    updateUserRoles: async (newUser: UserInterfaceWithRolesFromDB) => {
+        const user:UserInterfaceFromDB = await usersServices.findUserByUsername(newUser.username);
+        // kui oli admin kasutaja, siis muudeti tavaks
+            // remove admin row
+        // kui oli tava kasutaja, siis muudeti adminiks
+            // insert admin row
+        // kui uueks rolliks lisati admini roll
+        if (newUser.roles.includes('admin')) {
+            insertDataToDB("INSERT INTO UserRoles (UserID, Username, RoleID, Rolename) VALUE (?, ?, ?, ?)", [user.ID, user.username, 1, 'admin']);
+        } else {
+            deleteDataFromDB(`DELETE FROM UserRoles WHERE username = ? AND Rolename = ?`, [newUser.username, 'admin'])
+        }
+
+        return true;
     }
 };
 
