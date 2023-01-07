@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { UserInterface, UsernameInterfaceFromDB } from "./interfaces";
+import { UserInterface, UserInterfaceWithRolesFromDB, UsernameInterfaceFromDB } from "./interfaces";
 import usersServices from "./services";
 
 const usersControllers = {
@@ -37,6 +37,26 @@ const usersControllers = {
             message: 'List of users registered with roles.',
             users: users
         });
+    },
+    getUserRoles: async (req: Request, res: Response) => {
+        const username:string = req.params.username;
+        const user: undefined | UsernameInterfaceFromDB = await usersServices.findUserByUsername(username);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: `User not found`
+            });
+        } else {
+            const userWithRoles:UserInterfaceWithRolesFromDB = await usersServices.getUserRoles(username);
+
+            return res.status(200).json({
+                success: true,
+                message: `List of user roles`,
+                user: user.username,
+                roles: userWithRoles.roles
+            });
+        }
     },
     createUser: async (req: Request, res: Response) => {
         const { email, password, username } = req.body;

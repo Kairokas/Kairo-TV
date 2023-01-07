@@ -51,5 +51,5 @@ Kuidas saaks HTML'i elemente "pikendada" reactiga?
 
 ### TODO
 Body äärtest tumedam, keskelt hele gradient  
-Testandmebaasiga teste jooksutada (loo, testi, kustuta) 
- 
+Testandmebaasiga teste jooksutada (loo, testi, kustuta)  
+CDN jms. tõsta projekti

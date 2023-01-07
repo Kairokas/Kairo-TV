@@ -1,10 +1,16 @@
 import { UserInterface, UserInterfaceFromDB, UserInterfaceWithRolesFromDB } from "./interfaces";
 import { getDataFromDB, insertDataToDB, deleteDataFromDB } from "../../functions";
+import bcrypt from 'bcrypt';
 
 const usersServices = {
     findUserByUsername: async (username: string) => {
         // siin teeme joini users ja rollide vahel, et teada saada kasutaja õigused
-        let user:UserInterfaceFromDB | undefined = await getDataFromDB(`SELECT email, username, password FROM User WHERE username = ?`, [username]);
+        // let user:UserInterfaceFromDB | undefined = await getDataFromDB(`SELECT email, username, password FROM User WHERE username = ?`, [username]);
+        let user:any = await getDataFromDB(`SELECT email, username, password FROM User WHERE username = ?`, [username]);
+
+        if (typeof user !== 'undefined') {
+            user = user[0];
+        }
         //console.log(user);
         //let user = usersFromDB.find(element => element.username === username);
 
@@ -13,7 +19,6 @@ const usersServices = {
     },
     getUserRoles: async (username: string) => {
         let roles:string[] = [];
-        let id:number;
         let userRolesRows:string[] = await getDataFromDB(`SELECT Username, Rolename FROM UserRoles WHERE username = ?`, [username]);
 
         userRolesRows.map((row:any) => {roles.push(row.Rolename);});
@@ -76,6 +81,14 @@ const usersServices = {
         return users;
     },
     createUser: async (user: UserInterface) => {
+        let saltRounds:number;
+
+        if (process.env.SALT_ROUNDS) {
+            saltRounds = parseInt(process.env.SALT_ROUNDS);
+        } else {
+            throw new Error("SALT_ROUNDS environment variable is not set")
+        }
+
         const newUser: UserInterface = {
             email: user.email,
             password: user.password,
@@ -87,8 +100,11 @@ const usersServices = {
         if (newUserExists) {
             return false;
         } else {
-            // enne krüptime parooli ja siis saltime ka veel
-            insertDataToDB("INSERT INTO User VALUE (?, ?, ?)", [user.email, user.password, user.username]);
+            const hashedPassword = await bcrypt.hash(user.password, saltRounds);
+
+            const DBResponse = await insertDataToDB("INSERT INTO User (Username, Password, Email) VALUE (?, ?, ?)", [user.username, hashedPassword, user.email]);
+
+            insertDataToDB("INSERT INTO UserRoles (UserID, Username, RoleID, Rolename) VALUE (?, ?, ?, ?)", [DBResponse.insertId, user.username, 2, 'user']);
 
             return true;
         }

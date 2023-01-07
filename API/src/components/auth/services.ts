@@ -9,7 +9,7 @@ export const loginServices = {
         let saltRounds: number;
         let jwt_password: string;
         const user:UserInterfaceFromDB | undefined = await usersServices.findUserByUsername(username);
-
+        
         // Alumise puudumisel
         if (process.env.SALT_ROUNDS) {
             saltRounds = parseInt(process.env.SALT_ROUNDS);
@@ -31,19 +31,19 @@ export const loginServices = {
         //let fake_pw = await bcrypt.hash('VSjkzibw', saltRounds);
 
         const match = await bcrypt.compare(password, user.password);
-
+        //const match = password == user.password;
         // kui sisestati vale parool
         if (!match) return false;
         //console.log(match);
-        const userRoles = await usersServices.getUserRoles(username);
+        const userWithRoles = await usersServices.getUserRoles(username);
 
         const payload = {
             username: username,
-            roles: userRoles
+            roles: userWithRoles.roles
         };
-        //console.log(payload);
+        console.log(payload);
         const token = jwt.sign(payload, jwt_password, { expiresIn: '4h' });
-
+        
         return token;
     }
 }

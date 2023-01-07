@@ -49,9 +49,10 @@ app.get('/api/v1/userexists/:username', usersControllers.userExists);
 
 // Kasutaja pärimine kasutajanime alusel
 app.get('/api/v1/users/:username',  globalMiddlewares.isLoggedIn, usersControllers.getUserByUsername);
+app.get('/api/v1/userroles/:username',  globalMiddlewares.isLoggedIn, usersControllers.getUserRoles);
 
 // lisa uus kasutaja
-app.post('/api/v1/users', globalMiddlewares.isLoggedIn, globalMiddlewares.checkCreationData('users'), usersControllers.createUser);
+app.post('/api/v1/users', globalMiddlewares.checkCreationData('users'), usersControllers.createUser);
 
 // kustuta kasutaja
 app.delete('/api/v1/users/:username', globalMiddlewares.isLoggedIn, globalMiddlewares.isAdmin, usersControllers.deleteUser);
@@ -94,6 +95,9 @@ app.listen(PORT, () => { console.log('Server is running'); });
 // patch päringud andmete muutmiseks
 // testida kõik route'd
 // interface/tüüpe rohkem kirjeldada igalpool.. ntks SQL kasutajate pärimisel [UserInterfaceWithRolesFromDB]
-// rollid teatud routidele
+// rollide kontroll teatud routidele
+// paroolide sisestamine hashitud kujul andmebaasi
 // kuidas front-endile asju pärida API'st
 // regex parameetritele?
+// login teha bcrypti peale kui paroolid andmebaasis hashitud kujul
+// TS tüüpide jaoks ES lint peale panna vms.

@@ -54,11 +54,10 @@ async function userExists(username) {
     }
   ).then((response) => {
       let res = response.json();
-      //console.log(res);
+
       return res;
     }
   ).then((data) => {
-      //console.log(data);
       result = data;
     }
   );
@@ -73,7 +72,7 @@ async function userExists(username) {
   }
 }
 
-async function addUser(email, username, password) {
+async function registerUser(email, username, password) {
   let result;
   const data = {
     email: email,
@@ -91,7 +90,7 @@ async function addUser(email, username, password) {
     })
     .then((response) => {
       let res = response.json();
-      //console.log(res);
+
       return res;
     })
     .then((data) => {
@@ -100,22 +99,22 @@ async function addUser(email, username, password) {
 
   if (result.success) {
     console.log("Kasutaja lisatud" + JSON.stringify(result));
-    return true;
+    return result;
   } else {
     console.log("Kasutaja EI lisatud" + JSON.stringify(result));
-    return result.message;
+    return result;
   }
 }
 
 export function Home(props) {
   const [isTokenOK, changeIsTokenOK] = React.useState(false);
-
+  const [username, changeUsername] = React.useState();
+  
   async function checkIsTokenOK() {
     const token = localStorage.getItem('JWTToken');
     let result;
   
     if (!token) {
-      //console.log('Not Authorized');
       return false;
     } else {
       await fetch(
@@ -127,17 +126,15 @@ export function Home(props) {
         })
         .then((response) => {
           let res = response.json();
-          //console.log(res);
           return res;
         })
         .then((data) => {
-          //console.log(data);
           result = data;
         });
-      //console.log(result);
-      // console.log(token);
+
       if (result.success) {
         console.log('Authorized');
+        changeUsername(result.user);
         return true;
       } else {
         console.log('Not Authorized');
@@ -156,7 +153,7 @@ export function Home(props) {
 
   return (
     <div>
-      {isTokenOK?<AuthenticatedHome />:<UnAuthenticatedHome />}
+      {isTokenOK?<AuthenticatedHome user={username} />:<UnAuthenticatedHome />}
     </div>
   )
 }
@@ -180,7 +177,6 @@ export function Home(props) {
 //   render() {
 //     return (
 //       <div>
-//         {console.log(isTokenOK())}
 //         {isTokenOK()?<AuthenticatedHome />:<UnAuthenticatedHome />}
 //       </div>
 //     )
@@ -189,7 +185,7 @@ export function Home(props) {
 
 async function login(username, password) {
   const authentication = await authenticate(username, password);
-  //console.log("login vastus, mis siia ei jõua vahepeal?: " + JSON.stringify(authentication));
+
   if (authentication.authenticated) {
     localStorage.setItem('JWTToken', authentication.token);
 
@@ -211,7 +207,6 @@ export function UnAuthenticatedHome(props) {
   // }
 
   function handleChange(event) {
-    //console.log(event);
     if (event.target.name === 'password') {
       changePassword(event.target.value);
     } else if (event.target.name === 'username') {
@@ -220,11 +215,9 @@ export function UnAuthenticatedHome(props) {
     //this.setState({value: event.target.value});
   }
 
-  //anehls0
-  //VSjkzibw
-
-  function handleSubmit() {
-    if (!login(username, password)) {
+  async function handleSubmit() {
+    if (!await login(username, password)) {
+      console.log('login failed');
       changeErrorMessage('Viga kasutajanimes või paroolis');
     } else {
       window.location.reload(false);
@@ -244,9 +237,7 @@ export function UnAuthenticatedHome(props) {
         </a>
         <ul id="controls-right">
           <li>
-            <Popup
-              trigger={<a id="users-button" className="menu-button fa fa-user"></a>}
-              modal>
+            <Popup trigger={<a id="users-button" className="menu-button fa fa-user"></a>} modal>
               {close => (
                 <div className="modal">
                   <button className="close" onClick={close}>
@@ -309,7 +300,10 @@ export function UnAuthenticatedHome(props) {
 class UnAuthenticatedHomeContent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {email: '', username: '', password: '', error: ''};
+    this.state = {email: '', username: '', password: '', error: '', registerSucess: false, countdownSeconds: 5};
+
+    this.handleCountdown = this.handleCountdown.bind(this);
+
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -327,7 +321,6 @@ class UnAuthenticatedHomeContent extends React.Component {
 
   async handleSubmit(e) {
     e.preventDefault();
-    const pwregex = new RegExp('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|\]).{8,32}$');
     
     if (await userExists(this.state.username)) {
       this.setState({error: "Selline kasutajanimi on juba olemas!"});
@@ -338,19 +331,17 @@ class UnAuthenticatedHomeContent extends React.Component {
       //   this.setState({error: ""});
       // }
     } else {
-      const addUserTrueOrMessage = addUser(this.state.email, this.state.username, this.state.password);
-      if (addUserTrueOrMessage) {
-        [3,2,1].forEach(element => {
-          setTimeout(function () {
-            this.setState({error: `Registreerimine õnnestus, Teid suunatakse ${element}... sekundi pärast edasi`});
-          }, 1000);
-        });
+      const addUserTrueOrMessage = await registerUser(this.state.email, this.state.username, this.state.password);
+
+      if (addUserTrueOrMessage.success === true) {
+        this.setState({registerSucess: true});
+        this.handleCountdown();
 
         //login(this.state.username, this.state.password);
 
         //window.location.reload(false);
       } else {
-        this.setState({error: addUserTrueOrMessage});
+        this.setState({error: addUserTrueOrMessage.message});
       }
     }
 
@@ -359,20 +350,26 @@ class UnAuthenticatedHomeContent extends React.Component {
     // } else {
     //   this.setState({error: "Parool ei vasta nõuetele!"});
     // }
-
-    
   }
+
+  handleCountdown() {
+    setInterval(
+      () => {
+        this.setState({error: `Registreerimine õnnestus, Teid suunatakse ${this.state.countdownSeconds}... sekundi pärast edasi`});
+
+        this.setState({countdownSeconds: this.state.countdownSeconds - 1});
+        
+        if(this.state.countdownSeconds === 0) {
+          window.location.reload(false);
+        }
+      },
+      1000
+    );
+  };
 
   render () {
     return (
       <div>
-        {
-          [3,2,1].forEach(element => {
-            setTimeout(function () {
-              `Registreerimine õnnestus, Teid suunatakse ${element}... sekundi pärast edasi`;
-            }, 1000);
-          })
-        }
         <form onSubmit={this.handleSubmit}>
           <label>
             Email address:
@@ -399,17 +396,43 @@ class UnAuthenticatedHomeContent extends React.Component {
 class AuthenticatedHome extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {searchText: '', page: ''};
+    this.state = {searchText: '', page: '', roles: '', username: props.user};
+
+    this.getUserRoles = this.getUserRoles.bind(this);
   }
 
   handleChange (e) {
     this.setState({searchText: e.target.value});
   }
+
+  async getUserRoles() {
+    const token = localStorage.getItem('JWTToken');
+
+    await fetch(`http://localhost:3000/api/v1/userexists/${this.state.username}`, {
+    //fetch("http://localhost:3000/api/v1/users", {
+      headers: {
+      'Authorization': token,
+    }})
+      .then((response) => {
+        let res = response.json();
+
+        return res;
+      })
+      .then((data) => {
+        console.log(data);
+        if (data.success) {
+          this.setState({roles: data.roles});
+        }
+      });
+  }
+
+  // küsime rolle ja vastavalt sellele näitame kas admin paneeli valikus v mitte
   
   render() {
     return (
       <div>
       <header id="controls">
+        {console.log(JSON.stringify(this.state))}
         {/* <div id="controls-parent"> */}
         <a className="home-button" href="./">
           Home/Logo
@@ -427,6 +450,13 @@ class AuthenticatedHome extends React.Component {
               className="menu-button fa fa-cog" 
               aria-hidden="true" 
               onClick={() => this.setState({page: "Settings"})}
+            >
+            </i>
+          </li>
+          <li>
+            <i 
+              aria-hidden="true" 
+              onClick={() => this.setState({page: "AdminPanel"})}
             >
             </i>
           </li>
@@ -482,7 +512,7 @@ class AuthenticatedHome extends React.Component {
       </header>
       {/* {console.log(this.state.page)} */}
       {this.state.page === ''?<HomeContent keyword={this.state.searchText} />:
-        this.state.page === 'Stats'?<Stats />:<Settings />
+        this.state.page === 'Stats'?<Stats />:<AdminPanel />
       }
       
     </div>
@@ -524,7 +554,7 @@ async function authenticate(username, password) {
     result = data;
   });
 
-  //console.log("fetch login vastus: " + JSON.stringify(result));
+  console.log("fetch login vastus: " + JSON.stringify(result));
 
   //if (result.error === "Username or password missing") {
   if (result.success === false) {
@@ -572,7 +602,6 @@ export function HomeContent(props) {
     }})
       .then((response) => {
         let res = response.json();
-        //console.log(res);
         return res;
       })
       .then((data) => {
@@ -585,10 +614,7 @@ export function HomeContent(props) {
   }
   
   React.useEffect(() => {
-    //console.log(token);
-    //console.log(keyword);
     // if (token) {
-      //console.log(keyword);
       if (keyword === '') {
         //console.log("pärime kõik");
         getAllMovies();
@@ -599,7 +625,6 @@ export function HomeContent(props) {
     // }
   }, [keyword]);
   
-  // console.log(token);
   let renderedOutput = movies.map((item) => (
     <div className="content-container" key={item.Title}>
       {item.Title}
@@ -625,7 +650,7 @@ export function Stats(props) {
     }})
       .then((response) => {
         let res = response.json();
-        //console.log(res);
+        
         return res;
       })
       .then((data) => {
@@ -640,7 +665,6 @@ export function Stats(props) {
   React.useEffect(() => {
     getAllMovies();
   }, []);
-  //console.log(movies);
 
   movies.map((item) => {
     if (movieYearsCount[item.ReleaseYear] === undefined) {
@@ -666,7 +690,7 @@ export function Stats(props) {
   );
 }
 
-export function Settings(props) {
+export function AdminPanel(props) {
   const keyword = props.keyword;
   const [users, changeUsers] = React.useState([]);
   const token = localStorage.getItem("JWTToken");
@@ -679,7 +703,7 @@ export function Settings(props) {
     }})
       .then((response) => {
         let res = response.json();
-        //console.log(res);
+
         return res;
       })
       .then((data) => {
@@ -692,10 +716,7 @@ export function Settings(props) {
   }
   
   React.useEffect(() => {
-    //console.log(token);
-    //console.log(keyword);
     // if (token) {
-      //console.log(keyword);
       if (keyword === '' || !keyword) {
         //console.log("pärime kõik");
         getAllUsersRoles();
@@ -707,7 +728,6 @@ export function Settings(props) {
     // }
   }, [keyword]);
   
-  console.log(users);
   let renderedOutput = users.map((item) => (
     <div className="content-container" key={item.username}>
       {item.username}
