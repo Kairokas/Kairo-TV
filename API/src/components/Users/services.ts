@@ -1,5 +1,5 @@
 import { UserInterface, UserInterfaceFromDB, UserInterfaceWithRolesFromDB } from "./interfaces";
-import { getDataFromDB, insertDataToDB, deleteDataFromDB } from "../../functions";
+import { getDataFromDB, insertDataToDB, deleteDataFromDB, updateDataInDB } from "../../functions";
 import bcrypt from 'bcrypt';
 
 const usersServices = {
@@ -122,6 +122,40 @@ const usersServices = {
             insertDataToDB("INSERT INTO UserRoles (UserID, Username, RoleID, Rolename) VALUE (?, ?, ?, ?)", [user.ID, user.username, 1, 'admin']);
         } else {
             deleteDataFromDB(`DELETE FROM UserRoles WHERE username = ? AND Rolename = ?`, [newUser.username, 'admin'])
+        }
+
+        return true;
+    },
+    doesEmailExist: async (email: string) => {
+        let emailExists = await getDataFromDB(`SELECT email FROM User WHERE email = ?`, [email]);
+        
+        if (emailExists) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    updateUserData: async (username:string, email: string, password: string) => {
+        let saltRounds:number;
+
+        if (process.env.SALT_ROUNDS) {
+            saltRounds = parseInt(process.env.SALT_ROUNDS);
+        } else {
+            throw new Error("SALT_ROUNDS environment variable is not set")
+        }
+
+        if (email !== '' && password !== '') {
+            const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+            await updateDataInDB(`UPDATE User SET email = ? WHERE Username = ?`, [email, username]);
+
+            await updateDataInDB(`UPDATE User SET Password = ? WHERE Username = ?`, [hashedPassword, username]);
+        } else if (email === '') {
+            const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+            await updateDataInDB(`UPDATE User SET Password = ? WHERE Username = ?`, [hashedPassword, username]);
+        } else if (password === '') {
+            await updateDataInDB(`UPDATE User SET email = ? WHERE Username = ?`, [email, username]);
         }
 
         return true;

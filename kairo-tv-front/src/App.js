@@ -215,7 +215,9 @@ export function UnAuthenticatedHome(props) {
     //this.setState({value: event.target.value});
   }
 
-  async function handleSubmit() {
+  async function handleSubmit(event) {
+    event.preventDefault();
+
     if (!await login(username, password)) {
       console.log('login failed');
       changeErrorMessage('Viga kasutajanimes või paroolis');
@@ -245,15 +247,22 @@ export function UnAuthenticatedHome(props) {
                   </button>
                   {/* <div className="header">Login</div> */}
                   <div className="content">
-                    <label>
+                    <form onSubmit={handleSubmit}>
+                      <label htmlFor="username">Kasutaja nimi:</label><br/>
+                      <input onChange={handleChange} type="username" placeholder="Enter Username" name="username" required/>
+                      <label htmlFor="password">Parool:</label><br/>
+                      <input onChange={handleChange} type="password" placeholder="Enter Password" name="password" required/>
+
+                      <input type="submit" value="Login" />
+                    </form>
+                    {/* <label>
                       Username:
                       <input onChange={handleChange} type="username" placeholder="Enter Username" name="username" required/>
                     </label>
                     <label>
                       Password:
-                      <input onChange={handleChange} type="password" placeholder="Enter Password" name="password" required/>
                     </label>
-                    <input type="submit" value="Login" onClick={handleSubmit} />
+                    <input type="submit" value="Login" onClick={handleSubmit} /> */}
                     <p id='error-text'>{errorMessage}</p>
                     {/* <button
                       className="button"
@@ -352,11 +361,17 @@ class UnAuthenticatedHomeContent extends React.Component {
   }
 
   handleCountdown() {
+    // lahendab bugi, et 1 sekund peab ootama enne kui countdown hakkab
+    this.setState({error: `Registreerimine õnnestus, Teid suunatakse ${this.state.countdownSeconds}... sekundi pärast edasi`});
+    
+    this.setState({countdownSeconds: this.state.countdownSeconds - 1});
     setInterval(
       () => {
         this.setState({error: `Registreerimine õnnestus, Teid suunatakse ${this.state.countdownSeconds}... sekundi pärast edasi`});
 
         this.setState({countdownSeconds: this.state.countdownSeconds - 1});
+
+        login(this.state.username, this.state.password);
         
         if(this.state.countdownSeconds === 0) {
           window.location.reload(false);
@@ -369,6 +384,7 @@ class UnAuthenticatedHomeContent extends React.Component {
   render () {
     return (
       <div>
+        <h2>REGISTREERIMINE</h2>
         <form onSubmit={this.handleSubmit}>
           <label>
             Email address:
@@ -513,7 +529,7 @@ class AuthenticatedHome extends React.Component {
       {/* {console.log(this.state.page)} */}
       {this.state.page === ''?<HomeContent keyword={this.state.searchText} />:
         this.state.page === 'Stats'?<Stats />:
-          this.state.page === 'Settings'?<Settings />:<AdminPanel loggedUsername={this.state.username} searchkeyword={this.state.searchText} />
+          this.state.page === 'Settings'?<Settings loggedUsername={this.state.username} />:<AdminPanel loggedUsername={this.state.username} searchkeyword={this.state.searchText} />
       }
       
     </div>
@@ -783,7 +799,84 @@ export function AdminPanel(props) {
 }
 
 export function Settings(props) {
+  const user = props.loggedUsername;
+  const [email, changeEmail] = React.useState('');
+  const [oldPassword, changeOldPassword] = React.useState('');
+  const [newPassword, changeNewPassword] = React.useState('');
+  const [confNewPassword, changeConfNewPassword] = React.useState('');
+  const [error, changeError] = React.useState('');
 
+  function handleChange(event) {
+    if (event.target.name === 'email') {
+      changeEmail(event.target.value);
+    } else if (event.target.name === 'old_password') {
+      changeOldPassword(event.target.value);
+    } else if (event.target.name === 'new_password') {
+      changeNewPassword(event.target.value);
+    } else if (event.target.name === 'conf_new_password') {
+      changeConfNewPassword(event.target.value);
+    }
+    //this.setState({value: event.target.value});
+  }
+
+  async function uploadChangedData(event) {
+    let data = {email: email, oldPassword: oldPassword, newPassword: confNewPassword};
+    event.preventDefault();
+
+    if (newPassword !== confNewPassword) {
+      changeError('Uued paroolid peavad ühtima!');
+
+      return;
+    }
+
+    fetch(`http://localhost:3000/api/v1/users/${user}`, {
+    //fetch("http://localhost:3000/api/v1/users", {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('JWTToken')
+      },
+      body: JSON.stringify(data)
+    }).then((response) => {
+      let res = response.json();
+
+      return res;
+    }).then((data) => {
+      if (data.success) {
+        changeError('Kasutajaandmed muudetud!');
+      } else {
+        changeError(data.message);
+      }    
+    });
+  }
+
+  return (
+    <section>
+      <div>
+        <form onSubmit={uploadChangedData}>
+          <label htmlFor="email">Email:</label>
+          <input onChange={handleChange} value={email} type="email" placeholder="Enter Email" name="email"/>
+
+          <input type="submit" value="Muuda emaili" />
+        </form>
+      </div>
+      <div>
+        <form onSubmit={uploadChangedData}>
+          <label htmlFor="old_password">Vana parool:</label>
+          <input onChange={handleChange} value={oldPassword} type="password" placeholder="Vana parool" name="old_password" required/>
+          
+          <label htmlFor="new_password">Uus parool:</label>
+          <input onChange={handleChange} value={newPassword} type="password" placeholder="Uus parool" name="new_password" required/>
+          
+          <label htmlFor="conf_new_password">Uus parool uuesti:</label>
+          <input onChange={handleChange} value={confNewPassword} type="password" placeholder="Uus parool uuesti" name="conf_new_password" required/>
+          
+          <input type="submit" value="Vaheta parool" />
+        </form>
+        <p>{error}</p>
+      </div>
+    </section>
+  );
 }
 
 // function SettingsController() {
@@ -807,4 +900,15 @@ export function Settings(props) {
 // TODO
 // iga x aja tagant vaadatakse tagataustal kas token kehtib - kui mitte, siis logitakse välja
 // regamisel olemasolev kasutaja asemel soovitatakse ka teisi nimesid, mis saadaval
-// username võiks ära eemaldada ja jätta aind emaili
+// telefonis klahvilukku peale panna saaks
+// treileri näitamine hoverdades
+// teaserid pealehel või kõige popimad filmid/sarjad
+// tunglause: me lubame, et meie saidilt ei kao asjad NS ära!!
+// natuke parem tunglause: Teiste tuntud loojate sisu on meil olemas!!
+// pakub sisu, mida saab ka näha
+// kui sisu ei ole, siis on suurelt tekst, et seda pole ja alles siis soovitused
+// ise saaks settingutes muuta pealehe välimust?
+// minu tellimused - näha kaua kestab sisu tellimus
+// näha kuna läks subscription maha
+// privaatsuspoliitika
+// sisu keele valimine

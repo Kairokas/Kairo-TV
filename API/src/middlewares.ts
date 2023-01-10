@@ -54,7 +54,7 @@ const globalMiddlewares = {
         // }
         //console.log(token);
         if (!token) {
-            return res.status(401).json({
+            return res.status(404).json({
                 success: false,
                 error: 'No token provided',
             });

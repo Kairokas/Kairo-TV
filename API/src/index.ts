@@ -5,12 +5,13 @@ import moviesControllers from './components/Movies/controllers';
 import usersControllers from './components/Users/controllers';
 import tvSeriesControllers from './components/TVSeries/controllers';
 import { authController } from './components/auth/controllers';
+import usersMiddlewares from './components/Users/middlewares';
 const cors = require('cors')
 
 // sebida siia vb veel infi juurde, mida logida võiks
 const logger = (req: Request, res: Response, next: NextFunction) => {
     // kirjutame faili ka selle sisu
-    console.log(`${new Date().toLocaleString()} ${req.method} ${req.url} ${JSON.stringify(req.headers)}`);
+    console.log(`${new Date().toLocaleString()} ${req.method} ${req.url} ${JSON.stringify(req.body)} ${JSON.stringify(req.headers)}`);
     next();
 };
 
@@ -53,6 +54,8 @@ app.get('/api/v1/users/:username',  globalMiddlewares.isLoggedIn, usersControlle
 app.get('/api/v1/userroles/:username',  globalMiddlewares.isLoggedIn, usersControllers.getUserRoles);
 
 app.patch('/api/v1/userroles/:username', globalMiddlewares.isLoggedIn, globalMiddlewares.isAdmin, usersControllers.updateUserRoles);
+
+app.patch('/api/v1/users/:username', globalMiddlewares.isLoggedIn, usersMiddlewares.checkUpdateUserData, usersControllers.updateUser);
 
 // lisa uus kasutaja
 app.post('/api/v1/users', globalMiddlewares.checkCreationData('users'), usersControllers.createUser);
@@ -102,3 +105,6 @@ app.listen(PORT, () => { console.log('Server is running'); });
 // regex parameetritele?
 // TS tüüpide jaoks ES lint peale panna vms.
 // admin rolli saab lisada user õigusega ainult - bug
+// staatus koodid üle vaadata et oleks vastavuses
+// global middlewaredes teha muudatus kontrollimaks kõiki inpute
+// kasutaja updatemisel kontrollida kas emaili või uue parooli olemasolust

@@ -41,7 +41,7 @@ export const loginServices = {
             username: username,
             roles: userWithRoles.roles
         };
-        console.log(payload);
+        
         const token = jwt.sign(payload, jwt_password, { expiresIn: '4h' });
         
         return token;
