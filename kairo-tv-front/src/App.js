@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import Popup from 'reactjs-popup';
 import {Bar} from 'react-chartjs-2';
@@ -44,6 +44,38 @@ export const root = ReactDOM.createRoot(document.getElementById("root"));
 //     )
 //   };
 // }
+
+async function tokenChecker() {
+  const token = localStorage.getItem('JWTToken');
+  let result;
+
+  if (!token) {
+    return false;
+  } else {
+    await fetch(
+      "http://localhost:3000/api/v1/token", {
+      method: 'GET', 
+      headers: {
+        'Authorization': token,
+      }
+      }).then((response) => {
+        let res = response.json();
+  
+        return res;
+      }).then((data) => {
+        result = data;
+      });
+
+    if (result.success) {
+      console.log('Authorized');
+      
+      return result;
+    } else {
+      console.log('Not Authorized');
+      return false;
+    }
+  }
+}
 
 async function userExists(username) {
   let result;
@@ -109,46 +141,21 @@ async function registerUser(email, username, password) {
 export function Home(props) {
   const [isTokenOK, changeIsTokenOK] = React.useState(false);
   const [username, changeUsername] = React.useState();
-  
-  async function checkIsTokenOK() {
-    const token = localStorage.getItem('JWTToken');
-    let result;
-  
-    if (!token) {
-      return false;
-    } else {
-      await fetch(
-        "http://localhost:3000/api/v1/token", {
-          method: 'GET', 
-          headers: {
-            'Authorization': token,
-          }
-        })
-        .then((response) => {
-          let res = response.json();
-          return res;
-        })
-        .then((data) => {
-          result = data;
-        });
-
-      if (result.success) {
-        console.log('Authorized');
-        changeUsername(result.user);
-        return true;
-      } else {
-        console.log('Not Authorized');
-        return false;
-      }
-    }
-  }
-
-  async function checkToken() {
-    changeIsTokenOK(await checkIsTokenOK());
-  }
 
   React.useEffect(() => {
-    checkToken();
+    async function fuckToken() {
+      const response = await tokenChecker();
+
+      if (response.success) {
+        changeUsername(response.user);
+
+        changeIsTokenOK(true);
+      } else {
+        changeIsTokenOK(false);
+      }
+    }
+
+    fuckToken();
   }, []);
 
   return (
@@ -239,7 +246,7 @@ export function UnAuthenticatedHome(props) {
         </a>
         <ul id="controls-right">
           <li>
-            <Popup trigger={<a id="users-button" className="menu-button fa fa-user"></a>} modal>
+            <Popup trigger={<i id="users-button" className="menu-button fa fa-user"></i>} modal>
               {close => (
                 <div className="modal">
                   <button className="close" onClick={close}>
@@ -398,7 +405,7 @@ class UnAuthenticatedHomeContent extends React.Component {
           </label>
           <input type="submit" value="Rega!" />
         </form>
-        {this.state.error!=''?this.state.error:''}
+        {this.state.error !== ''?this.state.error:''}
       </div>
     );
   }
@@ -451,11 +458,11 @@ class AuthenticatedHome extends React.Component {
         </a>
         <ul id="controls-right">
           <li>
-            <a
+            <i
               id="stats-button"
               className="menu-button fa fa-bar-chart"
               onClick={() => this.setState({page: "Stats"})}
-            ></a>
+            ></i>
           </li>
           <li>
             <i 
@@ -526,6 +533,9 @@ class AuthenticatedHome extends React.Component {
         )} */}
         {/* </div> */}
       </header>
+
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/HkRjIq8Cp2A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      
       {/* {console.log(this.state.page)} */}
       {this.state.page === ''?<HomeContent keyword={this.state.searchText} />:
         this.state.page === 'Stats'?<Stats />:
@@ -689,6 +699,8 @@ export function Stats(props) {
     } else {
       movieYearsCount[item.ReleaseYear] += 1;
     }
+
+    return '';
   });
 
   return (
@@ -708,7 +720,6 @@ export function Stats(props) {
 }
 
 export function AdminPanel(props) {
-  const keyword = props.searchkeyword;
   const [users, changeUsers] = React.useState([]);
   const token = localStorage.getItem("JWTToken");
 
