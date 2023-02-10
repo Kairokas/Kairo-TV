@@ -29,22 +29,6 @@ ChartJS.register(
 export const header = ReactDOM.createRoot(document.getElementById("header-content"));
 export const root = ReactDOM.createRoot(document.getElementById("root"));
 
- // setter
-// localStorage.setItem('my-key', textForStorage);
-
-// // getter
-// const textFromStorage = localStorage.getItem('my-key');
-// localStorage.setItem('items', JSON.stringify(items));  
-
-//   render () {
-//     return (
-//       <JWTToken.Provider value={auth()}>
-//         <HeaderContent />
-//       </JWTToken.Provider>
-//     )
-//   };
-// }
-
 async function tokenChecker() {
   const token = localStorage.getItem('JWTToken');
   let result;
@@ -165,31 +149,6 @@ export function Home(props) {
   )
 }
 
-// export class Home extends React.Component {
-//   // constructor() {
-//   //   super();
-//   //   this.state = {isAuthenticated: false};
-//   // }
-
-//   //this.setState({isAuthenticated: true});
-  
-//   // checkToken = async () => {
-//   //   return await isTokenOK();
-//   // };
-
-//   // async checkToken() {
-//   //   return await isTokenOK();
-//   // }
-
-//   render() {
-//     return (
-//       <div>
-//         {isTokenOK()?<AuthenticatedHome />:<UnAuthenticatedHome />}
-//       </div>
-//     )
-//   }
-// }
-
 async function login(username, password) {
   const authentication = await authenticate(username, password);
 
@@ -206,12 +165,6 @@ export function UnAuthenticatedHome(props) {
   const [errorMessage, changeErrorMessage] = React.useState('');
   const [username, changeUsername] = React.useState('');
   const [password, changePassword] = React.useState('');
-
-  // const [showLogin, updateShowLogin] = React.useState(false);
-
-  // function showLoginC() {
-  //   updateShowLogin(true);
-  // }
 
   function handleChange(event) {
     if (event.target.name === 'password') {
@@ -233,10 +186,6 @@ export function UnAuthenticatedHome(props) {
     }
   }
 
-  // <Popup trigger={<button> Trigger</button>} position="right center">
-  //   <div>Popup content here !!</div>
-  // </Popup>
-  //console.log(page);
   return (
     <div>
       <header id="controls">
@@ -255,34 +204,14 @@ export function UnAuthenticatedHome(props) {
                   {/* <div className="header">Login</div> */}
                   <div className="content">
                     <form onSubmit={handleSubmit}>
-                      <label htmlFor="username">Kasutaja nimi:</label><br/>
-                      <input onChange={handleChange} type="username" placeholder="Enter Username" name="username" required/>
-                      <label htmlFor="password">Parool:</label><br/>
-                      <input onChange={handleChange} type="password" placeholder="Enter Password" name="password" required/>
+                      {/* <label htmlFor="username">Kasutaja nimi:</label><br/> */}
+                      <input className="reg-input neumo-input" onChange={handleChange} type="username" placeholder="Enter Username" name="username" required/>
+                      {/* <label htmlFor="password">Parool:</label><br/> */}
+                      <input className="reg-input neumo-input" onChange={handleChange} type="password" placeholder="Enter Password" name="password" required/>
 
-                      <input type="submit" value="Login" />
+                      <input id="reg-button" type="submit" value="Login" />
                     </form>
-                    {/* <label>
-                      Username:
-                      <input onChange={handleChange} type="username" placeholder="Enter Username" name="username" required/>
-                    </label>
-                    <label>
-                      Password:
-                    </label>
-                    <input type="submit" value="Login" onClick={handleSubmit} /> */}
                     <p id='error-text'>{errorMessage}</p>
-                    {/* <button
-                      className="button"
-                      onClick={() => {
-                        if (authenticate()) {
-                          <ContentController />
-                          close();
-                        } else {
-                          <p id='error-text'>Viga kasutajanimes või paroolis</p>
-                        }
-                      }}>
-                      Login
-                    </button> */}
                   </div>
                   {/* <div className="actions">
                     
@@ -294,21 +223,6 @@ export function UnAuthenticatedHome(props) {
         </ul>
       </header>
       <UnAuthenticatedHomeContent />
-      {/* {showLogin?
-      
-        <div id="login-screen">
-          <div id="login-screen-content">
-            <span className="close">&times;</span>
-            <label htmlFor="username"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="username" required/>
-
-            <label htmlFor="password"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="password" required/>
-
-            <button type="submit">Login</button>
-          </div>
-        </div>
-      :''} */}
     </div>
   );
 }
@@ -339,12 +253,6 @@ class UnAuthenticatedHomeContent extends React.Component {
     
     if (await userExists(this.state.username)) {
       this.setState({error: "Selline kasutajanimi on juba olemas!"});
-
-      // if (authenticate(this.state.username, this.state.password)) {
-
-      // } else {
-      //   this.setState({error: ""});
-      // }
     } else {
       const addUserTrueOrMessage = await registerUser(this.state.email, this.state.username, this.state.password);
 
@@ -359,17 +267,13 @@ class UnAuthenticatedHomeContent extends React.Component {
         this.setState({error: addUserTrueOrMessage.message});
       }
     }
-
-    // if (pwregex.test(this.state.password)) {
-
-    // } else {
-    //   this.setState({error: "Parool ei vasta nõuetele!"});
-    // }
   }
 
   handleCountdown() {
     // lahendab bugi, et 1 sekund peab ootama enne kui countdown hakkab
     this.setState({error: `Registreerimine õnnestus, Teid suunatakse ${this.state.countdownSeconds}... sekundi pärast edasi`});
+
+    login(this.state.username, this.state.password);
     
     this.setState({countdownSeconds: this.state.countdownSeconds - 1});
     setInterval(
@@ -377,8 +281,6 @@ class UnAuthenticatedHomeContent extends React.Component {
         this.setState({error: `Registreerimine õnnestus, Teid suunatakse ${this.state.countdownSeconds}... sekundi pärast edasi`});
 
         this.setState({countdownSeconds: this.state.countdownSeconds - 1});
-
-        login(this.state.username, this.state.password);
         
         if(this.state.countdownSeconds === 0) {
           window.location.reload(false);
@@ -390,22 +292,24 @@ class UnAuthenticatedHomeContent extends React.Component {
 
   render () {
     return (
-      <div>
-        <h2>REGISTREERIMINE</h2>
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Email address:
-            <input onChange={this.handleChange} value={this.state.email} type="text" name="email" placeholder="Email address"></input>      
-            Username:
-            <input onChange={this.handleChange} value={this.state.username} type="text" name="username" placeholder="Kasutajanimi"></input>      
-            Password:
-            <input data-toggle="tooltip" data-placement="top" title="8 tähemärki, 1 suur täht, 1 sümbol" onChange={this.handleChange} value={this.state.password} type="password" name="password" placeholder="Parool">
-              
-            </input>
-          </label>
-          <input type="submit" value="Rega!" />
-        </form>
-        {this.state.error !== ''?this.state.error:''}
+      <div className="body">
+        <div className="registration neumo-div">
+          <h2>REGISTREERUMINE</h2>
+          <form onSubmit={this.handleSubmit}>
+            <label>
+              {/* Emaili aadress: */}
+              <input required className="reg-input neumo-input" onChange={this.handleChange} value={this.state.email} type="email" name="email" placeholder="Email aadress"></input>      
+              <br/>
+              {/* Kasutajanimi: */}
+              <input required className="reg-input neumo-input" onChange={this.handleChange} value={this.state.username} type="text" name="username" placeholder="Kasutajanimi"></input>      
+              <br/>
+              {/* Parool: */}
+              <input required className="reg-input neumo-input" data-toggle="tooltip" data-placement="top" title="8 tähemärki, 1 suur täht, 1 sümbol" onChange={this.handleChange} value={this.state.password} type="password" name="password" placeholder="Parool"></input>
+            </label>
+            <input id="reg-button" type="submit" value="Rega!" />
+          </form>
+          {this.state.error !== ''?this.state.error:''}
+        </div>
       </div>
     );
   }
@@ -495,46 +399,15 @@ class AuthenticatedHome extends React.Component {
               onChange={(e) => {this.handleChange(e)}}
               value={this.state.value}
               id="search-input"
+              className="neumo-input"
               type="search"
               placeholder="Mida otsime na?"
             ></input>
           </li>
         </ul>
-        {/* https://stackoverflow.com/questions/40764596/using-react-router-with-cdn-and-without-webpack-or-browserify */}
-        {/* {props.onScreen === "Settings" ? (
-          <ul id="controls-right">
-            <li>
-              <a id="series-button" className="menu-button fa fa-tv"></a>
-            </li>
-            <li>
-              <a id="movies-button" className="menu-button fa fa-film"></a>
-            </li>
-            <li>
-              <a id="users-button" className="menu-button fa fa-user"></a>
-            </li>
-            <li>
-              <a
-                className="menu-button"
-                //onClick={() => root.render(<HomeContent />)}
-              >
-                <svg
-                  alt="Home"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
-                </svg>
-              </a>
-            </li>
-          </ul>
-        ) : (
-        )} */}
-        {/* </div> */}
       </header>
 
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/HkRjIq8Cp2A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      {/* <iframe width="560" height="315" src="https://www.youtube.com/embed/HkRjIq8Cp2A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> */}
       
       {/* {console.log(this.state.page)} */}
       {this.state.page === ''?<HomeContent keyword={this.state.searchText} />:
@@ -555,13 +428,6 @@ async function authenticate(username, password) {
     username: username,
     password: password
   }
-  //console.log(data);
-  // const [isAuthenticated, changeIsAuthenticated] = React.useState(false);
-  // const [token, changeToken] = React.useState();
-  //const token = useContext(JWTToken);
-  //const isAuthenticated = useContext(isAuthenticated);
-  // const username = 'anehls0';
-  // const data = { username: username, password: 'VSjkzibw' };
   
   await fetch(
   "http://localhost:3000/api/v1/login", {
@@ -589,11 +455,6 @@ async function authenticate(username, password) {
 
     return {authenticated: false};
   } else {
-    //console.log(data);
-    // changeUser(username);
-    //changeToken(data.token);
-    //changeIsAuthenticated(true);
-
     return {authenticated: true, token: result.token};
   }
 }
@@ -749,11 +610,6 @@ export function AdminPanel(props) {
     if (event.target.name === 'promote') {
       newRoles = ['user', 'admin'];
     } else {
-      // if (user === props.loggedUsername) {
-      //   window.alert('Iseendalt ei saa admin õigusi eemaldada!')
-      //   return;
-      // }
-
       newRoles = ['user'];
     }
     
@@ -772,11 +628,7 @@ export function AdminPanel(props) {
     }).then((data) => {
       if (data.success) {
         getAllUsersRoles();
-      }
-      //   changeUsers([]);
-      // } else {
-      //   changeUsers(data.users);
-      // }        
+      }    
     });
   }
   
@@ -890,24 +742,6 @@ export function Settings(props) {
   );
 }
 
-// function SettingsController() {
-//   header.render(
-//     <React.StrictMode>
-//       <HeaderContent onScreen="Settings" />
-//     </React.StrictMode>
-//   );
-
-//   root.render(
-//     <div></div>
-//   );
-// }
-
-// function StatsController() {
-//   root.render(
-//     <div></div>
-//   );
-// }
-
 // TODO
 // iga x aja tagant vaadatakse tagataustal kas token kehtib - kui mitte, siis logitakse välja
 // regamisel olemasolev kasutaja asemel soovitatakse ka teisi nimesid, mis saadaval
@@ -923,3 +757,7 @@ export function Settings(props) {
 // näha kuna läks subscription maha
 // privaatsuspoliitika
 // sisu keele valimine
+// admin paneelist sisu lisamine
+// reset fields on changing user info
+// parooli vahetamisel vana parooli valesti panek ei anna errorit
+// adminiks tegemine vahetab kasutajate kohad ära kuvamisel
